@@ -1,0 +1,59 @@
+#form {
+  width: 100%;
+  padding-top: 100px;
+}
+
+/* .fieldsdiv {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 50px;
+  flex-direction: column;
+  gap: 20px;
+    background-color: red;
+
+} */
+.contact-heading {
+  text-align: center;
+  margin-bottom: 40px;
+  padding-top: 50px;
+}
+.imagesection {
+  width: 30%;
+  height: 100vh;
+}
+.sectiondiv {
+  display: flex;
+}
+
+.feildstyle {
+  height: 40px;
+  max-width: 75%;
+  border: 3px black solid;
+  border-radius: 10px;
+  padding-left: 20px;
+  font-size: 16px;
+  margin-left: 10%;
+}
+
+.contactbtn {
+  background-color: burlywood;
+  height: 50px;
+  width: 100%;
+  max-width: 200px;
+  margin-left: 10%;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+  margin-top: 20px;
+  margin-bottom: 10%;
+  font-weight: bold;
+  cursor: pointer;
+  transition: transform 0.3s  ease;
+}
+.contactbtn:hover{
+  transform: translateY(-5px);
+  cursor: pointer;
+}

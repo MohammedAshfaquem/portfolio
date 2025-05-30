@@ -1,0 +1,40 @@
+@media (max-width: 768px) {
+  .home-content {
+    padding-left: 0px;
+    padding-top: 100px;
+
+    font-size: 10px;
+  }
+  .home-content h1 {
+    font-size: 20px;
+  }
+
+  #home {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    width: 100%;
+    height: 100vh;
+    background-color: white;
+  }
+
+  .home-content {
+    order: 1;
+  }
+
+  .home-image {
+    order: 2;
+    margin-top: 20px;
+    background-color: yellow;
+  }
+
+  .home-contactbtn {
+    order: 3;
+  }
+  .socialmediadiv {
+    order: 4;
+    justify-content: center;
+    margin-top: 20px;
+  }
+}

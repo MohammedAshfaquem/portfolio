@@ -1,0 +1,32 @@
+@media (max-width: 937px) {
+  .aboutmainbox {
+    flex-direction: colu  mn; 
+    padding: 20px;
+  }
+
+  .about1,
+  .about2 {
+    width: 100%;
+    height: auto;
+    text-align: center;
+    align-items: center;
+  }
+
+  
+  #about {
+    padding-bottom: 100px;
+  }
+
+  .about1-imagebox {
+    width: 200px;
+    height: 200px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .about1-imagebox img {
+    width: 100%;
+    border-radius: 20px;
+  }
+}

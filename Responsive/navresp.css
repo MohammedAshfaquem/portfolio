@@ -1,0 +1,29 @@
+@media (max-width: 768px) {
+  .menu {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-right: 20px;
+  }
+  .nav1 {
+    padding-left: 30px;
+    width: 100%;
+  }
+  .nav2 {
+    display: none;
+    flex-direction: column;
+    background-color: white;
+    position: absolute;
+    top: 80px; /* adjust based on your navbar height */
+    right: 0;
+    width: 100%;
+    text-align: center;
+    padding: 20px 0;
+    border-top: 1px solid #ccc;
+  }
+
+  .nav2.show {
+    display: flex;
+    margin-left: 100px;
+  }
+}

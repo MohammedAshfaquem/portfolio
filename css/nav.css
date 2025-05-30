@@ -1,0 +1,45 @@
+.navitem {
+  text-decoration: none;
+  font-weight: bold;
+  color: white;
+  transition: transform 0.3s ease;
+}
+.navitem:hover {
+  color: burlywood;
+  transform: translateY(-5px);
+}
+
+.navbar {
+  height: 80px;
+  width: 100%;
+  display: flex;
+  background-color: black;
+  color: burlywood;
+  display: flex;
+  position: fixed;
+  border-bottom: 1px solid grey;
+  z-index: 9999;
+}
+.menu {
+  display: none;
+  font-size: 30px;
+  cursor: pointer;
+}
+.nav1 {
+  display: flex;
+  align-items: center;
+  padding-left: 100px;
+  width: 50%;
+}
+.nav2 {
+  display: flex;
+  width: 40%;
+  align-items: center;
+  justify-content: space-around;
+}
+
+
+
+
+
+

@@ -1,0 +1,27 @@
+@media (max-width: 768px) {
+  .fieldsdiv {
+    flex-direction: row;
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }
+  .sectiondiv {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+
+  .feildstyle {
+    width: 100%;
+  }
+}
+@media (max-width: 1500px) {
+  .imagesection {
+    display: none;
+  }
+  .sectiondiv {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}

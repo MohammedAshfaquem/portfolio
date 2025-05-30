@@ -1,0 +1,54 @@
+@media (max-width: 768px) {
+  #home {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center; /* Center the text inside */
+    padding: 20px; /* Optional padding */
+  }
+
+  .home-content {
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+  }
+
+  .title,
+  .subtitle {
+    text-align: center;
+  }
+
+  .mobile-image {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+  }
+
+  .home-bluebox {
+    height: 200px;
+    width: 200px;
+    border-radius: 50%;
+    animation: none;
+    transform: none;
+  }
+
+  .home-contactbtn {
+    margin-top: 30px;
+  }
+
+  .home-image {
+    display: none;
+  }
+
+  .image-size {
+    height: 100%;
+    width: 200px;
+  }
+
+  .socialmediadiv {
+    justify-content: center;
+    margin-top: 20px;
+  }
+}

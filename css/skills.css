@@ -1,0 +1,82 @@
+#skills {
+  height: 100vh;
+  width: 100%;
+}
+.skillpage {
+  display: flex;
+}
+.skillpage1 {
+  width: 50%;
+  height: 100vh;
+  margin-left: 100px;
+}
+.allskillsdiv {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.skillcard {
+  display: flex;
+  width: 95%;
+  height: 60px;
+  flex-direction: column;
+  background-color: wheat;
+  border-radius: 10px;
+}
+.skill {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0px 10px 0px 10px;
+  width: 95%;
+  height: 30px;
+  margin-top: 10px;
+}
+.skills-heading {
+  text-align: center;
+  margin-bottom: 40px;
+  padding-top: 50px;
+}
+.skilllogoname {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+.skilllogosize {
+  height: 30px;
+  width: 30px;
+}
+.perecentagetext {
+  left: 10px;
+  font-weight: bold;
+}
+.perecentage {
+  height: 5px;
+  width: 100%;
+  background-color: #e0e0e0;
+  margin-top: 10px;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.perecentage-rate {
+  height: 100%;
+  background-color: #007bff;
+  border-radius: 4px;
+}
+
+.skillpage2 {
+  width: 50%;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.skill-image-size {
+  height: 70%;
+  margin-left: 10%;
+  margin-bottom: 30%;
+}
+
+

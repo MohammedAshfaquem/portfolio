@@ -1,0 +1,89 @@
+#home {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+  width: 100%;
+}
+
+.home-content h1 {
+  font-size: 300%;
+}
+.mobile-image{
+  display: none;
+}
+
+.home-bluebox {
+  background-color: blue;
+  display: flex;
+  overflow: hidden;
+  border-radius: 100%;
+  width: 70%;
+  height: 60%;
+  }
+.home-contactbtn {
+  height: 40%;
+  width: 60%;
+  background-color:burlywood;
+  color: white;
+  border-radius: 10px;
+   border: none;
+  font-weight: bold;
+  transition: transform 0.3s ease;
+}
+.home-contactbtn:hover {
+  transform: translateY(-5px);
+}
+.socialmediaicon {
+  width: 20%;
+  background-color: white;
+  border-radius: 12px;
+  transition: transform 0.3s ease;
+}
+.socialmediaicon:hover {
+  transform: translateY(-5px);
+}
+/* Animation keyframes */
+@keyframes slideFromRight {
+  0% {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideFromTop {
+  0% {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Apply animations */
+.home-content {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  align-items: start;
+  justify-content: center;
+  padding-left: 6%;
+  width: 50%;
+  animation: slideFromTop 1s ease-out;
+}
+
+.home-image {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 50%;
+  margin-right: 100px;
+  animation: slideFromRight 1s ease-out;
+}

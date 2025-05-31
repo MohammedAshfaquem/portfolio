@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>navbar</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+    <style>
+      .outer {
+        display: flex;
+        justify-content: space-evenly;
+        align-content: center;
+      }
+      body {
+        margin: 0;
+      }
+      .select {
+        border: none;
+        font-weight: 600;
+      }
+      .search-input {
+        padding: 10px 40px 10px 15px; /* Right padding for the icon */
+        border-radius: 100px;
+        width: 80px;
+        height: 5px;
+        font-style: italic;
+        border-color: #666;
+      }
+      .icon {
+        position: relative;
+      }
+      .search-icon {
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #666;
+        pointer-events: none; /* So it doesn’t block typing or clicks */
+      }
+      .second-div {
+        display: flex;
+        width: 100%;
+        background-color: black;
+        color: white;
+        height: 50px;
+        align-items: center;
+        justify-content: space-evenly;
+        font-size: 14px;
+        /* gap: 20px; */
+      }
+      .first-2 {
+        align-items: center;
+        display: flex;
+        width: 45%;
+        justify-content: space-evenly;
+      }
+
+      .switch-button {
+        height: 50px;
+        background-color: green;
+
+        border-radius: 100px;
+      }
+      .button {
+        display: inline-flex;
+        height: 30px;
+      }
+      .login {
+        background-color: lightgreen;
+        background-color: rgba(144, 238, 144, 0.7);
+        border: none;
+        border-radius: 100px;
+        width: 80px;
+        z-index: 1;
+        padding-left: 20px;
+      }
+      .signup {
+        background-color: green;
+        border: none;
+        border-radius: 100px;
+        width: 80px;
+        z-index: 2;
+        margin-right: -20px;
+        color: white;
+      }
+      .field {
+        justify-content: center;
+        display: flex;
+        font-size: 15px;
+      }
+    </style>
+  </head>
+  <body>
+    <div>
+      <div class="outer">
+        <img src="images/w3.jpg" alt="" height="50px" width="60px" />
+        <select name="Tutorials" id="" class="select">
+          <option value="Tutorials">Tutorials</option>
+        </select>
+        <select name="Exercises" id="" class="select">
+          <option value="Exercises">Exercises</option>
+        </select>
+        <select name="Certificates" id="" class="select">
+          <option value="Certificates">Certificates</option>
+        </select>
+        <select name="Services" id="" class="select">
+          <option value="Services">Services</option>
+        </select>
+        <div class="icon" style="padding-top: 10px">
+          <input type="text" class="search-input" placeholder="Search..." />
+          <i class="fas fa-search search-icon"></i>
+        </div>
+        <img
+          src="images/WhatsApp Image 2025-05-13 at 12.29.11_2e1ec8d2.jpg"
+          alt=""
+          width="50p"
+        />
+        <div class="first-2">
+          <div class="field">
+            <img src="images/twink.png" alt="" width="30px" />Plus
+          </div>
+
+          <div class="field">
+            <img src="images/teacher.png" alt="" width="20px" />Teacher
+          </div>
+
+          <div class="field">
+            <img src="images/taecher.png" alt="" width="20px" />Spaces
+          </div>
+
+          <div class="field">
+            <img src="images/cart.png" alt="" width="20px" />Get certified
+          </div>
+          <div class="button">
+            <button class="signup">Sign Up</button>
+            <button class="login">Log in</button>
+          </div>
+        </div>
+      </div>
+      <div class="second-div">
+        <label for="Html">HTML</label>
+        <label for="Css">CSS</label>
+        <label for="Java Script">JAVASCRIPT</label>
+        <label for="SQL">SQL</label>
+        <label for="Phython">PHYTHON</label>
+        <label for="Java">JAVA</label>
+        <label for="PHP">PHP</label>
+        <label for="How To">HOW TO</label>
+        <label for="W3.CSS">W3.CSS</label>
+        <label for="C">C</label>
+        <label for="C++">C++</label>
+        <label for="C#">C#</label>
+        <label for="Boot Strap">BOOTSTRAP</label>
+        <label for="React">REACT</label>
+        <label for="My Sql">MYSQL</label>
+        <label for="J Query ">JQUERY</label>
+        <label for="Excel">EXCEL</label>
+        <label for="Xml">XML</label>
+      </div>
+    </div>
+  </body>
+</html>

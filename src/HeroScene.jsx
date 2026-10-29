@@ -2,6 +2,7 @@ import React, {Suspense, useEffect, useMemo, useRef} from 'react';
 import {Canvas, events, useFrame, useThree} from '@react-three/fiber';
 import {Line, RoundedBox} from '@react-three/drei';
 import * as THREE from 'three';
+import {createCardBack,createRibbonGeometry,createRibbonTexture,ribbonSegments,ribbonColumns} from './cardDetails';
 
 // Keep the printed face unlit: studio lights should affect the holder, not bleach the type.
 function createCardFace(anisotropy) {
@@ -42,22 +43,24 @@ function createCardFace(anisotropy) {
   return texture;
 }
 
-function HangingCard({reset,onDrag,heroRef}) {
+function HangingCard({reset,flipped,onDrag,heroRef}) {
   const {size,camera,gl}=useThree();
   const zoom=size.width<430?100:size.width<760?125:145;
   const worldWidth=size.width/zoom,worldHeight=size.height/zoom;
   const mobile=size.width<760;
   const home=useMemo(()=>new THREE.Vector3(mobile?.12:worldWidth*.255,mobile?-worldHeight*.235:worldHeight*.09,0),[mobile,worldWidth,worldHeight]);
   const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const badge=useRef(),strap=useRef(),stitch=useRef(),sheen=useRef();
+  const badge=useRef(),stitch=useRef(),farStitch=useRef(),sheen=useRef();
   const position=useRef(home.clone()),velocity=useRef(new THREE.Vector3()),target=useRef(home.clone());
   const dragging=useRef(false),offset=useRef(new THREE.Vector3()),last=useRef(new THREE.Vector3()),lastTime=useRef(0);
   const cardScale=mobile?.82:1;
   const face=useMemo(()=>createCardFace(gl.capabilities.getMaxAnisotropy()),[gl]);
+  const back=useMemo(()=>createCardBack(gl.capabilities.getMaxAnisotropy()),[gl]);
+  const ribbon=useMemo(createRibbonGeometry,[]),ribbonTexture=useMemo(createRibbonTexture,[]);
   const curve=useMemo(()=>new THREE.CatmullRomCurve3(Array.from({length:4},()=>new THREE.Vector3())),[]);
   const sheenMaterial=useMemo(()=>new THREE.ShaderMaterial({transparent:true,depthWrite:false,uniforms:{time:{value:0}},vertexShader:'varying vec2 vUv; void main(){vUv=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0);}',fragmentShader:'varying vec2 vUv; uniform float time; void main(){float stripe=pow(max(0.0,1.0-abs(vUv.x+vUv.y*.4-mod(time*.12,2.0)+.5)*7.0),3.0);gl_FragColor=vec4(1.,1.,1.,stripe*.12);}'}),[]);
   useEffect(()=>{camera.zoom=zoom;camera.updateProjectionMatrix();position.current.copy(home);target.current.copy(home);velocity.current.set(0,0,0);},[zoom,camera,home]);
-  useEffect(()=>()=>{face.dispose();sheenMaterial.dispose();},[face,sheenMaterial]);
+  useEffect(()=>()=>{face.dispose();back.dispose();ribbon.dispose();ribbonTexture.dispose();sheenMaterial.dispose();},[face,back,ribbon,ribbonTexture,sheenMaterial]);
   useEffect(()=>{dragging.current=false;target.current.copy(home);velocity.current.set(0,0,0);onDrag(false);document.body.style.cursor='';},[reset,home,onDrag]);
   const release=e=>{
     if(!dragging.current)return;
@@ -81,7 +84,8 @@ function HangingCard({reset,onDrag,heroRef}) {
       badge.current.position.copy(p);
       const displacement=p.x-home.x;
       badge.current.rotation.z=THREE.MathUtils.damp(badge.current.rotation.z,-.045+displacement*.075+velocity.current.x*.025,7,dt);
-      badge.current.rotation.y=THREE.MathUtils.damp(badge.current.rotation.y,dragging.current?displacement*.045:-.075,7,dt);
+      const yaw=(flipped?Math.PI:0)-.075+(dragging.current?displacement*.045:0);
+      badge.current.rotation.y=reduced?yaw:THREE.MathUtils.damp(badge.current.rotation.y,yaw,7,dt);
     }
     const angle=badge.current?.rotation.z||0;
     const top=new THREE.Vector3(-Math.sin(angle)*1.84*cardScale,Math.cos(angle)*1.84*cardScale,0).add(p);
@@ -90,14 +94,30 @@ function HangingCard({reset,onDrag,heroRef}) {
     curve.points[1].copy(anchor).lerp(top,.35);
     curve.points[2].copy(anchor).lerp(top,.75);curve.points[2].x+=(p.x-home.x)*.1;
     curve.points[3].copy(top);
-    const values=curve.getPoints(40).flatMap(point=>point.toArray());
-    strap.current?.geometry.setPositions(values);
-    stitch.current?.geometry.setPositions(values.map((v,i)=>i%3===0?v-.025:v));
+    // The top stays fixed while the lower ribbon follows the card's actual yaw.
+    // A surface ribbon (rather than a flat line) makes the half-twist visible.
+    const positions=ribbon.attributes.position,nearEdge=[],farEdge=[];
+    const yaw=badge.current?.rotation.y||0;
+    for(let row=0;row<=ribbonSegments;row++){
+      const t=row/ribbonSegments,center=curve.getPoint(t),tangent=curve.getTangent(t).normalize();
+      let side=new THREE.Vector3(1,0,0).projectOnPlane(tangent);
+      if(side.lengthSq()<.001)side.set(0,0,1).projectOnPlane(tangent);
+      side.normalize().applyAxisAngle(tangent,-yaw*t*t*(3-2*t));
+      const normal=new THREE.Vector3().crossVectors(side,tangent).normalize();
+      for(let col=0;col<=ribbonColumns;col++){
+        const u=col/ribbonColumns,p=center.clone().addScaledVector(side,(u-.5)*.135).addScaledVector(normal,Math.sin(u*Math.PI)*.006);
+        positions.setXYZ(row*(ribbonColumns+1)+col,p.x,p.y,p.z);
+        if(col===0)nearEdge.push(p.x,p.y,p.z);if(col===ribbonColumns)farEdge.push(p.x,p.y,p.z);
+      }
+    }
+    positions.needsUpdate=true;ribbon.computeVertexNormals();ribbon.computeBoundingSphere();
+    stitch.current?.geometry.setPositions(nearEdge);farStitch.current?.geometry.setPositions(farEdge);
     sheenMaterial.uniforms.time.value=reduced?0:clock.elapsedTime;
   });
   return <>
-    <Line ref={strap} points={[[home.x,worldHeight/2,0],[home.x,home.y+1.8,0]]} color="#3d4934" lineWidth={mobile?11:15} raycast={()=>null}/>
-    <Line ref={stitch} points={[[home.x,worldHeight/2,0],[home.x,home.y+1.8,0]]} color="#81916b" lineWidth={1.5} raycast={()=>null}/>
+    <mesh geometry={ribbon} raycast={()=>null} frustumCulled={false}><meshStandardMaterial map={ribbonTexture} side={THREE.DoubleSide} roughness={.85} metalness={.05}/></mesh>
+    <Line ref={stitch} points={[[home.x,0,0],[home.x,1,0]]} color="#93a477" lineWidth={.8} raycast={()=>null}/>
+    <Line ref={farStitch} points={[[home.x,0,0],[home.x,1,0]]} color="#334528" lineWidth={.8} raycast={()=>null}/>
     <group ref={badge} position={home.toArray()} scale={cardScale}
       onPointerDown={e=>{e.stopPropagation();e.nativeEvent.preventDefault();target.current.copy(position.current);velocity.current.set(0,0,0);dragging.current=true;onDrag(true);offset.current.copy(position.current).sub(pointerPosition(e));last.current.copy(position.current);lastTime.current=performance.now();e.target.setPointerCapture(e.pointerId);document.body.style.cursor='grabbing';}}
       onPointerMove={e=>{if(!dragging.current)return;e.stopPropagation();const next=pointerPosition(e).add(offset.current);const halfCard=1.28*cardScale;next.x=THREE.MathUtils.clamp(next.x,-worldWidth/2+halfCard,worldWidth/2-halfCard);next.y=THREE.MathUtils.clamp(next.y,-worldHeight/2+1.8*cardScale,worldHeight/2-1.8*cardScale);const now=performance.now(),dt=Math.max(.016,(now-lastTime.current)/1000);velocity.current.copy(next).sub(last.current).divideScalar(dt).clampLength(0,9);target.current.copy(next);last.current.copy(next);lastTime.current=now;}}
@@ -107,10 +127,13 @@ function HangingCard({reset,onDrag,heroRef}) {
       onPointerOut={()=>{if(!dragging.current)document.body.style.cursor='';}}>
       <RoundedBox args={[2.57,3.43,.12]} radius={.12} smoothness={8}><meshPhysicalMaterial color="#dce0d1" metalness={.22} roughness={.3} clearcoat={1}/></RoundedBox>
       <mesh position={[0,0,.071]}><planeGeometry args={[2.44,3.26]}/><meshBasicMaterial map={face} toneMapped={false}/></mesh>
+      <mesh position={[0,0,-.071]} rotation={[0,Math.PI,0]}><planeGeometry args={[2.44,3.26]}/><meshBasicMaterial map={back} toneMapped={false}/></mesh>
       <mesh ref={sheen} position={[0,0,.075]} raycast={()=>null}><planeGeometry args={[2.44,3.26]}/><primitive object={sheenMaterial} attach="material"/></mesh>
       <mesh position={[0,1.91,0]}><torusGeometry args={[.15,.033,16,40]}/><meshStandardMaterial color="#bfc3b8" metalness={1} roughness={.22}/></mesh>
       <RoundedBox args={[.42,.34,.17]} position={[0,1.73,.1]} radius={.055} smoothness={6}><meshStandardMaterial color="#b7bdaf" metalness={.85} roughness={.22}/></RoundedBox>
       <RoundedBox args={[.13,.21,.02]} position={[0,1.75,.195]} radius={.05}><meshStandardMaterial color="#6a7360" metalness={.7} roughness={.2}/></RoundedBox>
+      <RoundedBox args={[.42,.34,.17]} position={[0,1.73,-.1]} radius={.055} smoothness={6}><meshStandardMaterial color="#b7bdaf" metalness={.85} roughness={.22}/></RoundedBox>
+      <RoundedBox args={[.13,.21,.02]} position={[0,1.75,-.195]} radius={.05}><meshStandardMaterial color="#6a7360" metalness={.7} roughness={.2}/></RoundedBox>
     </group>
   </>;
 }
@@ -119,10 +142,10 @@ class Fallback extends React.Component {
   state={error:false};static getDerivedStateFromError(){return {error:true};}
   render(){return this.state.error?<div className="fallback-card"><img src="/portrait.png" alt="Mohammed Ashfaque"/><strong>Mohammed Ashfaque</strong><span>Python / Full-stack developer</span></div>:this.props.children;}
 }
-export default function HeroScene({reset,heroRef,onDrag}) {
+export default function HeroScene({reset,flipped,heroRef,onDrag}) {
   return <Fallback><Canvas orthographic dpr={[1.5,2.5]} camera={{position:[0,0,10],zoom:145,near:.1,far:100}} gl={{alpha:true,antialias:true,powerPreference:'high-performance'}} eventSource={heroRef}
     events={state=>({...events(state),compute:(event,state)=>{const rect=heroRef.current?.getBoundingClientRect();if(!rect)return;const control=event.target?.closest?.('.hero-art button,.hero-copy a');if(control){state.pointer.set(100,100);}else{state.pointer.set((event.clientX-rect.left)/rect.width*2-1,-(event.clientY-rect.top)/rect.height*2+1);}state.raycaster.setFromCamera(state.pointer,state.camera);}})}>
     <ambientLight intensity={1.3}/><directionalLight position={[3,5,5]} intensity={2}/><directionalLight position={[-5,2,3]} intensity={1} color="#e2e7d7"/>
-    <Suspense fallback={null}><HangingCard reset={reset} heroRef={heroRef} onDrag={onDrag}/></Suspense>
+    <Suspense fallback={null}><HangingCard reset={reset} flipped={flipped} heroRef={heroRef} onDrag={onDrag}/></Suspense>
   </Canvas></Fallback>;
 }

@@ -85,7 +85,7 @@ function HangingCard({reset,onDrag,heroRef}) {
     }
     const angle=badge.current?.rotation.z||0;
     const top=new THREE.Vector3(-Math.sin(angle)*1.84*cardScale,Math.cos(angle)*1.84*cardScale,0).add(p);
-    const anchor=new THREE.Vector3(home.x-.1,worldHeight/2+.2,-.1);
+    const anchor=new THREE.Vector3(home.x-.1,mobile?home.y+3:worldHeight/2+.2,-.1);
     curve.points[0].copy(anchor);
     curve.points[1].copy(anchor).lerp(top,.35);
     curve.points[2].copy(anchor).lerp(top,.75);curve.points[2].x+=(p.x-home.x)*.1;

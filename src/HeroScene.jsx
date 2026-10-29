@@ -1,6 +1,6 @@
 import React, {Suspense, useEffect, useMemo, useRef} from 'react';
 import {Canvas, events, useFrame, useThree} from '@react-three/fiber';
-import {Line, RoundedBox, useTexture} from '@react-three/drei';
+import {Line, RoundedBox} from '@react-three/drei';
 import * as THREE from 'three';
 
 // Keep the printed face unlit: studio lights should affect the holder, not bleach the type.
@@ -42,38 +42,7 @@ function createCardFace(anisotropy) {
   return texture;
 }
 
-// A rendered character portrait, animated in the 3D scene. It is not a rigged GLB.
-function Character({wave,home,width,reduced}) {
-  const texture=useTexture('/mini-ashfaque-stylized.png');
-  const mesh=useRef();
-  const material=useMemo(()=>new THREE.ShaderMaterial({
-    uniforms:{map:{value:texture},wave:{value:0}},
-    transparent:true,depthWrite:false,toneMapped:false,
-    vertexShader:`varying vec2 vUv; uniform float wave;
-      void main(){vUv=uv;vec3 p=position;
-        // The waving forearm is on the image's left. Blend at the elbow.
-        float influence=(1.0-smoothstep(0.37,0.47,uv.x))*smoothstep(0.63,0.79,uv.y);
-        vec2 pivot=vec2(-0.22,0.25);float a=wave*influence;
-        vec2 delta=p.xy-pivot;p.xy=pivot+mat2(cos(a),-sin(a),sin(a),cos(a))*delta;
-        gl_Position=projectionMatrix*modelViewMatrix*vec4(p,1.0);}`,
-    fragmentShader:`varying vec2 vUv; uniform sampler2D map;
-      void main(){vec4 color=texture2D(map,vUv);if(color.a<0.01)discard;gl_FragColor=color;
-      #include <tonemapping_fragment>
-      #include <colorspace_fragment>
-      }`
-  }),[texture]);
-  useEffect(()=>()=>material.dispose(),[material]);
-  useFrame(({clock})=>{
-    material.uniforms.wave.value=wave&&!reduced?Math.sin(clock.elapsedTime*6)*.13:0;
-    if(mesh.current)mesh.current.rotation.z=reduced?0:Math.sin(clock.elapsedTime*1.5)*.012;
-  });
-  const mobile=width<760;
-  return <mesh ref={mesh} position={[mobile?home.x+1.35:home.x-2.32,mobile?home.y-1.28:home.y-1.25,-.5]} scale={mobile?.6:1} raycast={()=>null}>
-    <planeGeometry args={[1.76,2.5,36,48]}/><primitive object={material} attach="material"/>
-  </mesh>;
-}
-
-function HangingCard({reset,wave,onDrag,heroRef}) {
+function HangingCard({reset,onDrag,heroRef}) {
   const {size,camera,gl}=useThree();
   const zoom=size.width<430?100:size.width<760?125:145;
   const worldWidth=size.width/zoom,worldHeight=size.height/zoom;
@@ -130,7 +99,7 @@ function HangingCard({reset,wave,onDrag,heroRef}) {
     <Line ref={strap} points={[[home.x,worldHeight/2,0],[home.x,home.y+1.8,0]]} color="#3d4934" lineWidth={mobile?11:15} raycast={()=>null}/>
     <Line ref={stitch} points={[[home.x,worldHeight/2,0],[home.x,home.y+1.8,0]]} color="#81916b" lineWidth={1.5} raycast={()=>null}/>
     <group ref={badge} position={home.toArray()} scale={cardScale}
-      onPointerDown={e=>{e.stopPropagation();e.nativeEvent.preventDefault();dragging.current=true;onDrag(true);offset.current.copy(position.current).sub(pointerPosition(e));last.current.copy(position.current);lastTime.current=performance.now();e.target.setPointerCapture(e.pointerId);document.body.style.cursor='grabbing';}}
+      onPointerDown={e=>{e.stopPropagation();e.nativeEvent.preventDefault();target.current.copy(position.current);velocity.current.set(0,0,0);dragging.current=true;onDrag(true);offset.current.copy(position.current).sub(pointerPosition(e));last.current.copy(position.current);lastTime.current=performance.now();e.target.setPointerCapture(e.pointerId);document.body.style.cursor='grabbing';}}
       onPointerMove={e=>{if(!dragging.current)return;e.stopPropagation();const next=pointerPosition(e).add(offset.current);const halfCard=1.28*cardScale;next.x=THREE.MathUtils.clamp(next.x,-worldWidth/2+halfCard,worldWidth/2-halfCard);next.y=THREE.MathUtils.clamp(next.y,-worldHeight/2+1.8*cardScale,worldHeight/2-1.8*cardScale);const now=performance.now(),dt=Math.max(.016,(now-lastTime.current)/1000);velocity.current.copy(next).sub(last.current).divideScalar(dt).clampLength(0,9);target.current.copy(next);last.current.copy(next);lastTime.current=now;}}
       onPointerUp={e=>{e.stopPropagation();release(e);}}
       onPointerCancel={release}
@@ -143,7 +112,6 @@ function HangingCard({reset,wave,onDrag,heroRef}) {
       <RoundedBox args={[.42,.34,.17]} position={[0,1.73,.1]} radius={.055} smoothness={6}><meshStandardMaterial color="#b7bdaf" metalness={.85} roughness={.22}/></RoundedBox>
       <RoundedBox args={[.13,.21,.02]} position={[0,1.75,.195]} radius={.05}><meshStandardMaterial color="#6a7360" metalness={.7} roughness={.2}/></RoundedBox>
     </group>
-    <Character wave={wave} home={home} width={size.width} reduced={reduced}/>
   </>;
 }
 
@@ -151,10 +119,10 @@ class Fallback extends React.Component {
   state={error:false};static getDerivedStateFromError(){return {error:true};}
   render(){return this.state.error?<div className="fallback-card"><img src="/portrait.png" alt="Mohammed Ashfaque"/><strong>Mohammed Ashfaque</strong><span>Python / Full-stack developer</span></div>:this.props.children;}
 }
-export default function HeroScene({reset,wave,heroRef,onDrag}) {
+export default function HeroScene({reset,heroRef,onDrag}) {
   return <Fallback><Canvas orthographic dpr={[1.5,2.5]} camera={{position:[0,0,10],zoom:145,near:.1,far:100}} gl={{alpha:true,antialias:true,powerPreference:'high-performance'}} eventSource={heroRef}
     events={state=>({...events(state),compute:(event,state)=>{const rect=heroRef.current?.getBoundingClientRect();if(!rect)return;const control=event.target?.closest?.('.hero-art button,.hero-copy a');if(control){state.pointer.set(100,100);}else{state.pointer.set((event.clientX-rect.left)/rect.width*2-1,-(event.clientY-rect.top)/rect.height*2+1);}state.raycaster.setFromCamera(state.pointer,state.camera);}})}>
     <ambientLight intensity={1.3}/><directionalLight position={[3,5,5]} intensity={2}/><directionalLight position={[-5,2,3]} intensity={1} color="#e2e7d7"/>
-    <Suspense fallback={null}><HangingCard reset={reset} wave={wave} heroRef={heroRef} onDrag={onDrag}/></Suspense>
+    <Suspense fallback={null}><HangingCard reset={reset} heroRef={heroRef} onDrag={onDrag}/></Suspense>
   </Canvas></Fallback>;
 }

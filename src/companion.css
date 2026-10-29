@@ -1,0 +1,36 @@
+.floating-companion{position:fixed;right:25px;bottom:22px;width:244px;height:145px;z-index:40;pointer-events:none;transition:opacity .25s,transform .35s;isolation:isolate}
+.floating-companion.is-hidden{opacity:0;visibility:hidden;transform:translateY(25px);pointer-events:none}
+.companion-launcher{position:absolute;inset:0;background:none;padding:0;pointer-events:auto;text-align:left;border-radius:14px}
+.floating-character{position:absolute;width:92px;height:128px;right:0;bottom:0;filter:drop-shadow(0 8px 7px #2733231c);transition:transform .25s}
+.companion-art{width:100%;height:100%;overflow:visible;display:block}
+.companion-launcher:hover .floating-character{transform:translateY(-4px) rotate(2deg)}
+.floating-hello{position:absolute;right:64px;top:18px;white-space:nowrap;background:#fafbf4;border:1px solid #d5dacb;border-radius:13px 13px 1px 13px;box-shadow:0 5px 20px #2d352216;padding:12px 13px;font-size:10px;letter-spacing:0;color:#38412e}
+.floating-hello>span{margin-left:5px;display:inline-block;transform-origin:bottom center;animation:hello-hand 4s ease-in-out infinite}
+.companion-hand{transform-box:view-box;transform-origin:29% 41%;animation:avatar-wave 5s ease-in-out infinite}
+.is-waving .companion-hand{animation:avatar-wave .8s ease-in-out infinite}
+.companion-guide{position:absolute;right:8px;bottom:151px;width:326px;max-height:min(580px,calc(100dvh - 190px));overflow:auto;pointer-events:auto;border:1px solid #d8dece;background:#fafbf5;color:#2b3325;box-shadow:0 16px 65px #1e291d21;border-radius:15px;padding:22px;animation:guide-in .28s ease-out}
+.guide-header{display:flex;align-items:center;justify-content:space-between;gap:12px}.guide-eyebrow{font-family:monospace;font-size:8px;letter-spacing:1.1px;color:#7d896d}.guide-header>button{background:none;padding:4px;display:grid;place-items:center;color:#657257}
+.companion-guide h3{font-family:Manrope,sans-serif;font-size:19px;font-weight:600;letter-spacing:-.6px;margin:15px 0 11px}
+.companion-guide>p{font-size:11px;line-height:1.9;color:#7d8672}
+.companion-guide nav{display:flex;position:static!important;flex-direction:column;align-items:stretch;gap:8px;margin:18px 0 17px;padding:0!important;border:0!important;background:none!important}
+.companion-guide nav>a,.companion-guide nav>button{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;padding:13px 11px;border:1px solid #dce1d3;border-radius:5px;background:none;font-size:10px;text-align:left;transition:background .2s}
+.companion-guide nav>a:hover,.companion-guide nav>button:hover{background:#e9eedf;color:#2b3325}.companion-guide nav>button>span{font-size:16px}
+.guide-answer{background:#edf1e5;padding:12px;font-size:10px;line-height:1.85;border-radius:5px;color:#69785a}.guide-answer>a{display:block;font-size:9px;margin-top:8px;text-decoration:underline}
+.companion-guide>small{font-size:8px;color:#929b86}
+.contact-top{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:25px;align-items:center}
+.contact .contact-title h2{font-size:clamp(65px,7.5vw,110px);margin:30px 0 38px}
+.contact .contact-title h2>a{position:static;display:inline-grid;vertical-align:middle;width:76px;height:76px;margin-left:20px}
+.contact .contact-title h2>a svg{width:38px;height:38px}
+.contact-companion{height:377px;position:relative;display:flex;align-items:flex-end;justify-content:center;margin-top:12px}
+.contact-character{position:absolute;bottom:30px;left:calc(50% - 112px);width:224px;height:310px;padding:0;background:none;filter:drop-shadow(0 12px 15px #0002);transition:transform .25s}
+.contact-character:hover{transform:translateY(-5px) rotate(1deg)}
+.contact-greeting{position:absolute;right:4px;top:-38px;z-index:2;padding:13px 17px;display:flex;gap:12px;align-items:center;border:1px solid #657255;border-radius:13px 13px 13px 1px;background:#f3f5e9;color:#343d2c;font-size:12px;line-height:1.65;text-align:left;box-shadow:0 8px 25px #0001;transform:rotate(-4deg);transition:transform .2s}
+.contact-greeting:hover{transform:rotate(0)}.contact-greeting>span{font-size:20px}
+.character-caption{position:absolute;bottom:7px;left:0;right:0;text-align:center;font-family:monospace;font-size:7px;letter-spacing:1.5px;color:#9eae8a}
+@keyframes avatar-wave{0%,50%,100%{transform:rotate(0)}8%,24%{transform:rotate(4deg)}16%,32%{transform:rotate(-3deg)}}
+@keyframes hello-hand{0%,65%,100%{transform:rotate(0)}72%,86%{transform:rotate(18deg)}79%,93%{transform:rotate(-10deg)}}
+@keyframes guide-in{from{opacity:0;transform:translateX(-22px) translateY(5px)}to{opacity:1;transform:none}}
+@media(max-width:1000px){.contact-top{grid-template-columns:minmax(0,1fr) 240px}.contact .contact-title h2{font-size:73px}.contact .contact-title h2>a{width:56px;height:56px;margin-left:15px}.contact .contact-title h2>a svg{width:29px;height:29px}.contact-companion{height:350px}.contact-character{width:200px;height:280px;left:calc(50% - 100px)}.contact-greeting{font-size:10px;right:0;padding:12px}}
+@media(max-width:760px){.floating-companion{right:12px;bottom:max(12px,env(safe-area-inset-bottom));width:212px;height:120px}.floating-character{width:76px;height:109px}.floating-hello{right:55px;top:15px;font-size:9px;padding:10px}.companion-guide{right:0;bottom:126px;width:min(326px,calc(100vw - 24px));padding:20px;max-height:calc(100dvh - 160px)}.contact-top{grid-template-columns:1fr;gap:0}.contact .contact-title h2{font-size:66px;margin-bottom:0}.contact .contact-title h2>a{width:56px;height:56px;margin-left:15px}.contact-companion{height:340px;max-width:280px;width:100%;justify-self:center;margin:50px 0 25px}.contact-character{width:205px;height:280px;left:calc(50% - 102px)}.contact-greeting{font-size:11px;right:0}.contact .eyebrow{line-height:1.7}}
+@media(max-width:430px){.contact .contact-title h2{font-size:57px}.contact .contact-title h2>a{width:47px;height:47px;margin-left:11px}.contact .contact-title h2>a svg{width:25px;height:25px}.contact-companion{height:315px}.contact-character{height:260px;width:190px;left:calc(50% - 95px)}.contact-greeting{font-size:10px}.floating-hello{font-size:8px}}
+@media(prefers-reduced-motion:reduce){.companion-hand,.floating-hello>span{animation:none}.companion-guide{animation:none}.floating-companion,.contact-character,.contact-greeting,.floating-character{transition:none}}

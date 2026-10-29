@@ -89,8 +89,9 @@ function HangingCard({reset,flipped,onDrag,heroRef}) {
       const yaw=(flipped?Math.PI:0)-.075+(dragging.current?displacement*.045:0);
       badge.current.rotation.y=reduced?yaw:THREE.MathUtils.damp(badge.current.rotation.y,yaw,7,dt);
     }
-    const angle=badge.current?.rotation.z||0;
-    const top=new THREE.Vector3(-Math.sin(angle)*1.875*cardScale,Math.cos(angle)*1.875*cardScale,0).add(p);
+    const top=new THREE.Vector3(0,1.875*cardScale,0);
+    if(badge.current)top.applyQuaternion(badge.current.quaternion);
+    top.add(p);
     const anchor=new THREE.Vector3(home.x-.1,mobile?home.y+3:worldHeight/2+.2,-.1);
     curve.points[0].copy(anchor);
     curve.points[1].copy(anchor).lerp(top,.35);
@@ -135,6 +136,7 @@ function HangingCard({reset,flipped,onDrag,heroRef}) {
       <mesh ref={sheen} geometry={printedFace} position={[0,0,.075]} raycast={()=>null}><primitive object={sheenMaterial} attach="material"/></mesh>
       <RoundedBox args={[.16,.29,.025]} position={[0,1.73,.092]} radius={.012} smoothness={6}><meshStandardMaterial color="#c8cec5" metalness={.72} roughness={.48}/></RoundedBox>
       <RoundedBox args={[.16,.29,.025]} position={[0,1.73,-.092]} radius={.012} smoothness={6}><meshStandardMaterial color="#c8cec5" metalness={.72} roughness={.48}/></RoundedBox>
+      <RoundedBox args={[.16,.025,.21]} position={[0,1.87,0]} radius={.01} smoothness={6}><meshStandardMaterial color="#c8cec5" metalness={.72} roughness={.48}/></RoundedBox>
       <RoundedBox args={[.27,.04,.19]} position={[0,1.57,0]} radius={.014} smoothness={6}><meshStandardMaterial color="#b9c1b2" metalness={.72} roughness={.48}/></RoundedBox>
     </group>
   </>;

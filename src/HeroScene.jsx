@@ -3,6 +3,7 @@ import {Canvas, events, useFrame, useThree} from '@react-three/fiber';
 import {Line, RoundedBox} from '@react-three/drei';
 import * as THREE from 'three';
 import {createCardBack,createRibbonGeometry,createRibbonTexture,ribbonSegments,ribbonColumns} from './cardDetails';
+import {createBadgeBody,createBadgeFace} from './badgeHardware';
 
 // Keep the printed face unlit: studio lights should affect the holder, not bleach the type.
 function createCardFace(anisotropy) {
@@ -57,10 +58,11 @@ function HangingCard({reset,flipped,onDrag,heroRef}) {
   const face=useMemo(()=>createCardFace(gl.capabilities.getMaxAnisotropy()),[gl]);
   const back=useMemo(()=>createCardBack(gl.capabilities.getMaxAnisotropy()),[gl]);
   const ribbon=useMemo(createRibbonGeometry,[]),ribbonTexture=useMemo(createRibbonTexture,[]);
+  const holder=useMemo(createBadgeBody,[]),printedFace=useMemo(createBadgeFace,[]);
   const curve=useMemo(()=>new THREE.CatmullRomCurve3(Array.from({length:4},()=>new THREE.Vector3())),[]);
   const sheenMaterial=useMemo(()=>new THREE.ShaderMaterial({transparent:true,depthWrite:false,uniforms:{time:{value:0}},vertexShader:'varying vec2 vUv; void main(){vUv=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0);}',fragmentShader:'varying vec2 vUv; uniform float time; void main(){float stripe=pow(max(0.0,1.0-abs(vUv.x+vUv.y*.4-mod(time*.12,2.0)+.5)*7.0),3.0);gl_FragColor=vec4(1.,1.,1.,stripe*.12);}'}),[]);
   useEffect(()=>{camera.zoom=zoom;camera.updateProjectionMatrix();position.current.copy(home);target.current.copy(home);velocity.current.set(0,0,0);},[zoom,camera,home]);
-  useEffect(()=>()=>{face.dispose();back.dispose();ribbon.dispose();ribbonTexture.dispose();sheenMaterial.dispose();},[face,back,ribbon,ribbonTexture,sheenMaterial]);
+  useEffect(()=>()=>{face.dispose();back.dispose();ribbon.dispose();ribbonTexture.dispose();holder.dispose();printedFace.dispose();sheenMaterial.dispose();},[face,back,ribbon,ribbonTexture,holder,printedFace,sheenMaterial]);
   useEffect(()=>{dragging.current=false;target.current.copy(home);velocity.current.set(0,0,0);onDrag(false);document.body.style.cursor='';},[reset,home,onDrag]);
   const release=e=>{
     if(!dragging.current)return;
@@ -88,11 +90,13 @@ function HangingCard({reset,flipped,onDrag,heroRef}) {
       badge.current.rotation.y=reduced?yaw:THREE.MathUtils.damp(badge.current.rotation.y,yaw,7,dt);
     }
     const angle=badge.current?.rotation.z||0;
-    const top=new THREE.Vector3(-Math.sin(angle)*1.84*cardScale,Math.cos(angle)*1.84*cardScale,0).add(p);
+    const top=new THREE.Vector3(-Math.sin(angle)*1.875*cardScale,Math.cos(angle)*1.875*cardScale,0).add(p);
     const anchor=new THREE.Vector3(home.x-.1,mobile?home.y+3:worldHeight/2+.2,-.1);
     curve.points[0].copy(anchor);
     curve.points[1].copy(anchor).lerp(top,.35);
     curve.points[2].copy(anchor).lerp(top,.75);curve.points[2].x+=(p.x-home.x)*.1;
+    const fabricBow=Math.sin((badge.current?.rotation.y||0)/2)*.065;
+    curve.points[1].z+=fabricBow;curve.points[2].z+=fabricBow;
     curve.points[3].copy(top);
     // The top stays fixed while the lower ribbon follows the card's actual yaw.
     // A surface ribbon (rather than a flat line) makes the half-twist visible.
@@ -102,10 +106,10 @@ function HangingCard({reset,flipped,onDrag,heroRef}) {
       const t=row/ribbonSegments,center=curve.getPoint(t),tangent=curve.getTangent(t).normalize();
       let side=new THREE.Vector3(1,0,0).projectOnPlane(tangent);
       if(side.lengthSq()<.001)side.set(0,0,1).projectOnPlane(tangent);
-      side.normalize().applyAxisAngle(tangent,-yaw*t*t*(3-2*t));
+      side.normalize().applyAxisAngle(tangent,-yaw*t);
       const normal=new THREE.Vector3().crossVectors(side,tangent).normalize();
       for(let col=0;col<=ribbonColumns;col++){
-        const u=col/ribbonColumns,p=center.clone().addScaledVector(side,(u-.5)*.135).addScaledVector(normal,Math.sin(u*Math.PI)*.006);
+        const u=col/ribbonColumns,p=center.clone().addScaledVector(side,(u-.5)*.13).addScaledVector(normal,Math.sin(u*Math.PI)*.012);
         positions.setXYZ(row*(ribbonColumns+1)+col,p.x,p.y,p.z);
         if(col===0)nearEdge.push(p.x,p.y,p.z);if(col===ribbonColumns)farEdge.push(p.x,p.y,p.z);
       }
@@ -125,15 +129,13 @@ function HangingCard({reset,flipped,onDrag,heroRef}) {
       onPointerCancel={release}
       onPointerOver={()=>{if(!dragging.current)document.body.style.cursor='grab';}}
       onPointerOut={()=>{if(!dragging.current)document.body.style.cursor='';}}>
-      <RoundedBox args={[2.57,3.43,.12]} radius={.12} smoothness={8}><meshPhysicalMaterial color="#dce0d1" metalness={.22} roughness={.3} clearcoat={1}/></RoundedBox>
-      <mesh position={[0,0,.071]}><planeGeometry args={[2.44,3.26]}/><meshBasicMaterial map={face} toneMapped={false}/></mesh>
-      <mesh position={[0,0,-.071]} rotation={[0,Math.PI,0]}><planeGeometry args={[2.44,3.26]}/><meshBasicMaterial map={back} toneMapped={false}/></mesh>
-      <mesh ref={sheen} position={[0,0,.075]} raycast={()=>null}><planeGeometry args={[2.44,3.26]}/><primitive object={sheenMaterial} attach="material"/></mesh>
-      <mesh position={[0,1.91,0]}><torusGeometry args={[.15,.033,16,40]}/><meshStandardMaterial color="#bfc3b8" metalness={1} roughness={.22}/></mesh>
-      <RoundedBox args={[.42,.34,.17]} position={[0,1.73,.1]} radius={.055} smoothness={6}><meshStandardMaterial color="#b7bdaf" metalness={.85} roughness={.22}/></RoundedBox>
-      <RoundedBox args={[.13,.21,.02]} position={[0,1.75,.195]} radius={.05}><meshStandardMaterial color="#6a7360" metalness={.7} roughness={.2}/></RoundedBox>
-      <RoundedBox args={[.42,.34,.17]} position={[0,1.73,-.1]} radius={.055} smoothness={6}><meshStandardMaterial color="#b7bdaf" metalness={.85} roughness={.22}/></RoundedBox>
-      <RoundedBox args={[.13,.21,.02]} position={[0,1.75,-.195]} radius={.05}><meshStandardMaterial color="#6a7360" metalness={.7} roughness={.2}/></RoundedBox>
+      <mesh geometry={holder}><meshPhysicalMaterial color="#dce0d1" metalness={.16} roughness={.38} clearcoat={.7}/></mesh>
+      <mesh geometry={printedFace} position={[0,0,.071]}><meshBasicMaterial map={face} toneMapped={false}/></mesh>
+      <mesh geometry={printedFace} position={[0,0,-.071]} rotation={[0,Math.PI,0]}><meshBasicMaterial map={back} toneMapped={false}/></mesh>
+      <mesh ref={sheen} geometry={printedFace} position={[0,0,.075]} raycast={()=>null}><primitive object={sheenMaterial} attach="material"/></mesh>
+      <RoundedBox args={[.16,.29,.025]} position={[0,1.73,.092]} radius={.012} smoothness={6}><meshStandardMaterial color="#c8cec5" metalness={.72} roughness={.48}/></RoundedBox>
+      <RoundedBox args={[.16,.29,.025]} position={[0,1.73,-.092]} radius={.012} smoothness={6}><meshStandardMaterial color="#c8cec5" metalness={.72} roughness={.48}/></RoundedBox>
+      <RoundedBox args={[.27,.04,.19]} position={[0,1.57,0]} radius={.014} smoothness={6}><meshStandardMaterial color="#b9c1b2" metalness={.72} roughness={.48}/></RoundedBox>
     </group>
   </>;
 }

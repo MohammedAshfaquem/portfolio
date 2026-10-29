@@ -1,0 +1,33 @@
+.header-actions{display:flex;align-items:center;gap:18px;margin-left:28px}header>nav{margin-left:auto}.theme-toggle{width:38px;height:38px;padding:0;background:transparent;border:1px solid #aab29d66;border-radius:50%;display:grid;place-items:center;color:var(--ink);transition:background .2s,border-color .2s}.theme-toggle:hover{background:#8093631a;border-color:#879a6d}.theme-icon{display:grid;place-items:center;animation:theme-icon-in .4s ease}.theme-toggle:hover .theme-icon{transform:rotate(15deg)}
+html{color-scheme:light}html[data-theme="dark"]{color-scheme:dark;--ink:#e7ebdf;--line:#343d32;--olive:#bacb9e;background:#171b17;color:#e7ebdf}
+[data-theme="dark"] body{background:#171b17;color:#e7ebdf}
+[data-theme="dark"] ::selection{background:#b9c99d;color:#172016}[data-theme="dark"] :focus-visible{outline-color:#b6c99a}
+[data-theme="dark"] .brand{color:#e7ebdf}[data-theme="dark"] .brand span,[data-theme="dark"] h1 em,[data-theme="dark"] h2 em,[data-theme="dark"] .period{color:#b4c594}
+[data-theme="dark"] .hero-intro p,[data-theme="dark"] .section-heading p,[data-theme="dark"] .project-meta p,[data-theme="dark"] .about-content>p,[data-theme="dark"] .job p,[data-theme="dark"] .accordion p,[data-theme="dark"] .approach>div>p{color:#a8b09d}
+[data-theme="dark"] .hero-intro strong{color:#e7ebdf}
+[data-theme="dark"] .hero-bottom,[data-theme="dark"] .orbit-label,[data-theme="dark"] .art-coordinate,[data-theme="dark"] .stack-strip>span,[data-theme="dark"] .work-toolbar>span,[data-theme="dark"] .job-no,[data-theme="dark"] .job small,[data-theme="dark"] .education>span,[data-theme="dark"] .education p,[data-theme="dark"] footer{color:#98a68b}
+[data-theme="dark"] .stack-strip i,[data-theme="dark"] .asterisk,[data-theme="dark"] .job h4,[data-theme="dark"] .drag-hint{color:#b2c393}
+[data-theme="dark"] .about{background:#20271f}[data-theme="dark"] .about-photo{background:#354030}[data-theme="dark"] .photo-note,[data-theme="dark"] .photo-location{color:#d1ddbf}
+[data-theme="dark"] .education{border-color:#3c4935}[data-theme="dark"] .text-link{border-color:#899b70}
+[data-theme="dark"] .tags span{border-color:#46513d;color:#aebda0}[data-theme="dark"] .project-arrow,[data-theme="dark"] .circle,[data-theme="dark"] .drag-hint button{border-color:#647654}
+[data-theme="dark"] .project:hover .project-arrow,[data-theme="dark"] .round-link:hover .circle{background:#36452b}
+[data-theme="dark"] .filters button.active{background:#35432c;border-color:#7f9465;color:#e7eddd}
+[data-theme="dark"] .contact{background:#10160f}[data-theme="dark"] .contact h2 em{color:#bdcfa5}
+[data-theme="dark"] .modal{background:#20271f;color:#e8eddf}[data-theme="dark"] .modal>p{color:#b0bca3}
+[data-theme="dark"] .companion-guide{background:#232b20;color:#e8eddf;border-color:#48543c;box-shadow:0 16px 70px #0005}
+[data-theme="dark"] .companion-guide>p{color:#b2bda7}[data-theme="dark"] .guide-eyebrow,[data-theme="dark"] .guide-header>button,[data-theme="dark"] .companion-guide>small{color:#a2b18e}
+[data-theme="dark"] .companion-guide nav>a,[data-theme="dark"] .companion-guide nav>button{border-color:#47513f}
+[data-theme="dark"] .companion-guide nav>a:hover,[data-theme="dark"] .companion-guide nav>button:hover{background:#35422d;color:#edf2e5}
+[data-theme="dark"] .guide-answer{background:#303d27;color:#c0cfb0}
+[data-theme="dark"] .floating-hello,[data-theme="dark"] .contact-greeting{background:#e3e9d7;color:#2c3824;border-color:#a0ae8b}
+[data-theme="dark"] .ticket,[data-theme="dark"] .dine,[data-theme="dark"] .food{color:#272c25}
+::view-transition-old(root){animation:none;z-index:1}::view-transition-new(root){animation:theme-reveal .7s cubic-bezier(.2,.7,.2,1);z-index:2}::view-transition-image-pair(root){isolation:auto}
+@keyframes theme-reveal{from{clip-path:circle(0 at var(--theme-x,90%) var(--theme-y,40px))}to{clip-path:circle(150vmax at var(--theme-x,90%) var(--theme-y,40px))}}
+@keyframes theme-icon-in{from{opacity:0;transform:rotate(-70deg) scale(.6)}to{opacity:1;transform:none}}
+html.theme-fading,html.theme-fading body,html.theme-fading header,html.theme-fading .about,html.theme-fading .about-photo,html.theme-fading .contact,html.theme-fading .modal,html.theme-fading .companion-guide,html.theme-fading .brand,html.theme-fading h1 em,html.theme-fading h2 em{transition:background-color .55s ease,color .45s ease,border-color .45s ease}
+.cursor-system{pointer-events:none;position:fixed;inset:0;z-index:1000;mix-blend-mode:exclusion;opacity:0;transition:opacity .15s}.cursor-active .cursor-system{opacity:1}.cursor-dot,.cursor-follower{position:fixed;left:0;top:0;will-change:transform;pointer-events:none}.cursor-dot:before{content:'';position:absolute;width:5px;height:5px;background:#f1f0e5;border-radius:50%;transform:translate(-50%,-50%)}.cursor-shape{position:absolute;display:grid;place-items:center;width:31px;height:31px;border:1px solid #f1f0e599;border-radius:50%;transform:translate(-50%,-50%);color:#f1f0e5;transition:width .22s,height .22s,background .22s,border-color .22s,scale .16s}.cursor-shape>span{font:8px monospace;letter-spacing:1px;line-height:1}.cursor-follower[data-mode="link"] .cursor-shape{width:44px;height:44px;background:#f1f0e51a;border-color:#f1f0e5}.cursor-follower[data-mode="link"] .cursor-shape>span{font-size:18px}.cursor-follower[data-mode="view"] .cursor-shape{width:66px;height:66px;background:#f1f0e5;border-color:transparent;color:#171c14}.cursor-follower[data-mode="drag"] .cursor-shape{width:52px;height:52px;border-style:dashed;background:#f1f0e516}.cursor-follower.is-pressed .cursor-shape{scale:.8}
+@media(hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference){html.cursor-active,html.cursor-active body,html.cursor-active a,html.cursor-active button{cursor:none!important}}
+@media(max-width:760px){.header-actions{margin-left:20px;gap:10px}.theme-toggle{width:33px;height:33px}header>nav{gap:17px}}
+@media(max-width:430px){.header-actions{margin-left:auto;gap:12px}[data-theme="dark"] header nav.open{background:#20271f;border-color:#3c4935}}
+@media(hover:none),(pointer:coarse){.cursor-system{display:none}}
+@media(prefers-reduced-motion:reduce){.cursor-system{display:none}.theme-icon{animation:none}::view-transition-old(root),::view-transition-new(root){animation:none}}

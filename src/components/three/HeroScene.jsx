@@ -1,0 +1,490 @@
+import { profile } from "../../data/profile";
+import React, { Suspense, useEffect, useMemo, useRef } from "react";
+import { Canvas, events, useFrame, useThree } from "@react-three/fiber";
+import { Line, RoundedBox } from "@react-three/drei";
+import * as THREE from "three";
+import {
+  createCardBack,
+  createRibbonGeometry,
+  createRibbonTexture,
+  ribbonSegments,
+  ribbonColumns,
+} from "./geometry/cardDetails";
+import { createBadgeBody, createBadgeFace } from "./geometry/badgeHardware";
+function createCardFace(anisotropy) {
+  const canvas = document.createElement("canvas");
+  canvas.width = 2048;
+  canvas.height = 2730;
+  const ctx = canvas.getContext("2d");
+  const texture = new THREE.CanvasTexture(canvas);
+  texture.colorSpace = THREE.SRGBColorSpace;
+  texture.anisotropy = anisotropy;
+  texture.minFilter = THREE.LinearFilter;
+  texture.magFilter = THREE.LinearFilter;
+  texture.generateMipmaps = false;
+  const draw = (image2) => {
+    ctx.fillStyle = "#f5f4ea";
+    ctx.fillRect(0, 0, 2048, 2730);
+    ctx.fillStyle = "#333c2e";
+    ctx.font = "500 41px Arial";
+    ctx.fillText("THE HUMAN BEHIND THE CODE", 100, 145);
+    ctx.font = "78px Arial";
+    ctx.fillText("↗", 1850, 156);
+    ctx.strokeStyle = "#bac1ad";
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.moveTo(100, 215);
+    ctx.lineTo(1948, 215);
+    ctx.stroke();
+    ctx.fillStyle = "#cbd2bc";
+    ctx.fillRect(100, 280, 1848, 1490);
+    ctx.save();
+    ctx.beginPath();
+    ctx.rect(100, 280, 1848, 1490);
+    ctx.clip();
+    ctx.fillStyle = "#edf0df";
+    ctx.font = "italic 420px Georgia";
+    ctx.fillText("hello.", 130, 850);
+    if (image2) ctx.drawImage(image2, 220, 0, 650, 525, 100, 280, 1848, 1490);
+    ctx.restore();
+    ctx.fillStyle = "#252c22";
+    ctx.font = "bold 143px Arial";
+    ctx.fillText("Mohammed", 100, 1985);
+    ctx.fillText("Ashfaque", 100, 2150);
+    ctx.font = "58px Arial";
+    ctx.fillText("Python / Full-stack developer", 100, 2280);
+    ctx.fillStyle = "#5f7047";
+    ctx.font = "160px Arial";
+    ctx.fillText("✳", 1775, 2135);
+    ctx.beginPath();
+    ctx.moveTo(100, 2370);
+    ctx.lineTo(1948, 2370);
+    ctx.stroke();
+    ctx.fillStyle = "#252c22";
+    for (let i = 0; i < 75; i++)
+      ctx.fillRect(100 + i * 9, 2430, 2 + (i % 4) * 1.5, 155);
+    ctx.font = "41px monospace";
+    ctx.fillText("HUMAN / DEVELOPER", 930, 2475);
+    ctx.font = "bold 46px monospace";
+    ctx.fillText("KERALA, INDIA", 930, 2555);
+    ctx.font = "35px monospace";
+    ctx.fillText("PERSONAL ID — 001", 930, 2615);
+    texture.needsUpdate = true;
+  };
+  draw();
+  const image = new Image();
+  image.onload = () => draw(image);
+  image.src = profile.assets.portrait;
+  return texture;
+}
+function HangingCard({ reset, flipped, onDrag, heroRef }) {
+  const { size, camera, gl } = useThree();
+  const zoom = size.width < 430 ? 100 : size.width < 760 ? 125 : 145;
+  const worldWidth = size.width / zoom,
+    worldHeight = size.height / zoom;
+  const mobile = size.width < 760;
+  const home = useMemo(
+    () =>
+      new THREE.Vector3(
+        mobile ? 0.12 : worldWidth * 0.255,
+        mobile ? -worldHeight * 0.235 : worldHeight * 0.09,
+        0,
+      ),
+    [mobile, worldWidth, worldHeight],
+  );
+  const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const badge = useRef(),
+    stitch = useRef(),
+    farStitch = useRef(),
+    sheen = useRef();
+  const position = useRef(home.clone()),
+    velocity = useRef(new THREE.Vector3()),
+    target = useRef(home.clone());
+  const dragging = useRef(false),
+    offset = useRef(new THREE.Vector3()),
+    last = useRef(new THREE.Vector3()),
+    lastTime = useRef(0);
+  const cardScale = mobile ? 0.82 : 1;
+  const face = useMemo(
+    () => createCardFace(gl.capabilities.getMaxAnisotropy()),
+    [gl],
+  );
+  const back = useMemo(
+    () => createCardBack(gl.capabilities.getMaxAnisotropy()),
+    [gl],
+  );
+  const ribbon = useMemo(createRibbonGeometry, []),
+    ribbonTexture = useMemo(createRibbonTexture, []);
+  const holder = useMemo(createBadgeBody, []),
+    printedFace = useMemo(createBadgeFace, []);
+  const curve = useMemo(
+    () =>
+      new THREE.CatmullRomCurve3(
+        Array.from({ length: 4 }, () => new THREE.Vector3()),
+      ),
+    [],
+  );
+  const sheenMaterial = useMemo(
+    () =>
+      new THREE.ShaderMaterial({
+        transparent: true,
+        depthWrite: false,
+        uniforms: { time: { value: 0 } },
+        vertexShader:
+          "varying vec2 vUv; void main(){vUv=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0);}",
+        fragmentShader:
+          "varying vec2 vUv; uniform float time; void main(){float stripe=pow(max(0.0,1.0-abs(vUv.x+vUv.y*.4-mod(time*.12,2.0)+.5)*7.0),3.0);gl_FragColor=vec4(1.,1.,1.,stripe*.12);}",
+      }),
+    [],
+  );
+  useEffect(() => {
+    camera.zoom = zoom;
+    camera.updateProjectionMatrix();
+    position.current.copy(home);
+    target.current.copy(home);
+    velocity.current.set(0, 0, 0);
+  }, [zoom, camera, home]);
+  useEffect(
+    () => () => {
+      face.dispose();
+      back.dispose();
+      ribbon.dispose();
+      ribbonTexture.dispose();
+      holder.dispose();
+      printedFace.dispose();
+      sheenMaterial.dispose();
+    },
+    [face, back, ribbon, ribbonTexture, holder, printedFace, sheenMaterial],
+  );
+  useEffect(() => {
+    dragging.current = false;
+    target.current.copy(home);
+    velocity.current.set(0, 0, 0);
+    onDrag(false);
+    document.body.style.cursor = "";
+  }, [reset, home, onDrag]);
+  const release = (e) => {
+    if (!dragging.current) return;
+    dragging.current = false;
+    onDrag(false);
+    document.body.style.cursor = "";
+    if (e?.target?.hasPointerCapture?.(e.pointerId))
+      e.target.releasePointerCapture(e.pointerId);
+  };
+  useEffect(() => {
+    const cancel = () => release();
+    window.addEventListener("blur", cancel);
+    return () => {
+      window.removeEventListener("blur", cancel);
+      document.body.style.cursor = "";
+    };
+  }, []);
+  const pointerPosition = (e) => {
+    const rect = heroRef.current.getBoundingClientRect();
+    return new THREE.Vector3(
+      (e.clientX - rect.left - size.width / 2) / zoom,
+      -(e.clientY - rect.top - size.height / 2) / zoom,
+      0,
+    );
+  };
+  useFrame(({ clock }, dt) => {
+    dt = Math.min(dt, 0.035);
+    const p = position.current;
+    if (!dragging.current) {
+      velocity.current.addScaledVector(home.clone().sub(p), dt * 34);
+      velocity.current.multiplyScalar(Math.exp(-dt * 5.3));
+      p.addScaledVector(velocity.current, dt);
+    } else p.lerp(target.current, 1 - Math.exp(-dt * 28));
+    if (badge.current) {
+      badge.current.position.copy(p);
+      const displacement = p.x - home.x;
+      badge.current.rotation.z = THREE.MathUtils.damp(
+        badge.current.rotation.z,
+        -0.045 + displacement * 0.075 + velocity.current.x * 0.025,
+        7,
+        dt,
+      );
+      const yaw2 =
+        (flipped ? Math.PI : 0) -
+        0.075 +
+        (dragging.current ? displacement * 0.045 : 0);
+      badge.current.rotation.y = reduced
+        ? yaw2
+        : THREE.MathUtils.damp(badge.current.rotation.y, yaw2, 7, dt);
+    }
+    const top = new THREE.Vector3(0, 1.875 * cardScale, 0);
+    if (badge.current) top.applyQuaternion(badge.current.quaternion);
+    top.add(p);
+    const anchor = new THREE.Vector3(
+      home.x - 0.1,
+      mobile ? home.y + 3 : worldHeight / 2 + 0.2,
+      -0.1,
+    );
+    curve.points[0].copy(anchor);
+    curve.points[1].copy(anchor).lerp(top, 0.35);
+    curve.points[2].copy(anchor).lerp(top, 0.75);
+    curve.points[2].x += (p.x - home.x) * 0.1;
+    const fabricBow = Math.sin((badge.current?.rotation.y || 0) / 2) * 0.065;
+    curve.points[1].z += fabricBow;
+    curve.points[2].z += fabricBow;
+    curve.points[3].copy(top);
+    const positions = ribbon.attributes.position,
+      nearEdge = [],
+      farEdge = [];
+    const yaw = badge.current?.rotation.y || 0;
+    for (let row = 0; row <= ribbonSegments; row++) {
+      const t = row / ribbonSegments,
+        center = curve.getPoint(t),
+        tangent = curve.getTangent(t).normalize();
+      let side = new THREE.Vector3(1, 0, 0).projectOnPlane(tangent);
+      if (side.lengthSq() < 1e-3) side.set(0, 0, 1).projectOnPlane(tangent);
+      side.normalize().applyAxisAngle(tangent, -yaw * t);
+      const normal = new THREE.Vector3()
+        .crossVectors(side, tangent)
+        .normalize();
+      for (let col = 0; col <= ribbonColumns; col++) {
+        const u = col / ribbonColumns,
+          p2 = center
+            .clone()
+            .addScaledVector(side, (u - 0.5) * 0.13)
+            .addScaledVector(normal, Math.sin(u * Math.PI) * 0.012);
+        positions.setXYZ(row * (ribbonColumns + 1) + col, p2.x, p2.y, p2.z);
+        if (col === 0) nearEdge.push(p2.x, p2.y, p2.z);
+        if (col === ribbonColumns) farEdge.push(p2.x, p2.y, p2.z);
+      }
+    }
+    positions.needsUpdate = true;
+    ribbon.computeVertexNormals();
+    ribbon.computeBoundingSphere();
+    stitch.current?.geometry.setPositions(nearEdge);
+    farStitch.current?.geometry.setPositions(farEdge);
+    sheenMaterial.uniforms.time.value = reduced ? 0 : clock.elapsedTime;
+  });
+  return (
+    <>
+      <mesh geometry={ribbon} raycast={() => null} frustumCulled={false}>
+        <meshStandardMaterial
+          map={ribbonTexture}
+          side={THREE.DoubleSide}
+          roughness={0.85}
+          metalness={0.05}
+        />
+      </mesh>
+      <Line
+        ref={stitch}
+        points={[
+          [home.x, 0, 0],
+          [home.x, 1, 0],
+        ]}
+        color="#93a477"
+        lineWidth={0.8}
+        raycast={() => null}
+      />
+      <Line
+        ref={farStitch}
+        points={[
+          [home.x, 0, 0],
+          [home.x, 1, 0],
+        ]}
+        color="#334528"
+        lineWidth={0.8}
+        raycast={() => null}
+      />
+      <group
+        ref={badge}
+        position={home.toArray()}
+        scale={cardScale}
+        onPointerDown={(e) => {
+          e.stopPropagation();
+          e.nativeEvent.preventDefault();
+          target.current.copy(position.current);
+          velocity.current.set(0, 0, 0);
+          dragging.current = true;
+          onDrag(true);
+          offset.current.copy(position.current).sub(pointerPosition(e));
+          last.current.copy(position.current);
+          lastTime.current = performance.now();
+          e.target.setPointerCapture(e.pointerId);
+          document.body.style.cursor = "grabbing";
+        }}
+        onPointerMove={(e) => {
+          if (!dragging.current) return;
+          e.stopPropagation();
+          const next = pointerPosition(e).add(offset.current);
+          const halfCard = 1.28 * cardScale;
+          next.x = THREE.MathUtils.clamp(
+            next.x,
+            -worldWidth / 2 + halfCard,
+            worldWidth / 2 - halfCard,
+          );
+          next.y = THREE.MathUtils.clamp(
+            next.y,
+            -worldHeight / 2 + 1.8 * cardScale,
+            worldHeight / 2 - 1.8 * cardScale,
+          );
+          const now = performance.now(),
+            dt = Math.max(0.016, (now - lastTime.current) / 1e3);
+          velocity.current
+            .copy(next)
+            .sub(last.current)
+            .divideScalar(dt)
+            .clampLength(0, 9);
+          target.current.copy(next);
+          last.current.copy(next);
+          lastTime.current = now;
+        }}
+        onPointerUp={(e) => {
+          e.stopPropagation();
+          release(e);
+        }}
+        onPointerCancel={release}
+        onPointerOver={() => {
+          if (!dragging.current) document.body.style.cursor = "grab";
+        }}
+        onPointerOut={() => {
+          if (!dragging.current) document.body.style.cursor = "";
+        }}
+      >
+        <mesh geometry={holder}>
+          <meshPhysicalMaterial
+            color="#dce0d1"
+            metalness={0.16}
+            roughness={0.38}
+            clearcoat={0.7}
+          />
+        </mesh>
+        <mesh geometry={printedFace} position={[0, 0, 0.071]}>
+          <meshBasicMaterial map={face} toneMapped={false} />
+        </mesh>
+        <mesh
+          geometry={printedFace}
+          position={[0, 0, -0.071]}
+          rotation={[0, Math.PI, 0]}
+        >
+          <meshBasicMaterial map={back} toneMapped={false} />
+        </mesh>
+        <mesh
+          ref={sheen}
+          geometry={printedFace}
+          position={[0, 0, 0.075]}
+          raycast={() => null}
+        >
+          <primitive object={sheenMaterial} attach="material" />
+        </mesh>
+        <RoundedBox
+          args={[0.16, 0.29, 0.025]}
+          position={[0, 1.73, 0.092]}
+          radius={0.012}
+          smoothness={6}
+        >
+          <meshStandardMaterial
+            color="#c8cec5"
+            metalness={0.72}
+            roughness={0.48}
+          />
+        </RoundedBox>
+        <RoundedBox
+          args={[0.16, 0.29, 0.025]}
+          position={[0, 1.73, -0.092]}
+          radius={0.012}
+          smoothness={6}
+        >
+          <meshStandardMaterial
+            color="#c8cec5"
+            metalness={0.72}
+            roughness={0.48}
+          />
+        </RoundedBox>
+        <RoundedBox
+          args={[0.16, 0.025, 0.21]}
+          position={[0, 1.87, 0]}
+          radius={0.01}
+          smoothness={6}
+        >
+          <meshStandardMaterial
+            color="#c8cec5"
+            metalness={0.72}
+            roughness={0.48}
+          />
+        </RoundedBox>
+        <RoundedBox
+          args={[0.27, 0.04, 0.19]}
+          position={[0, 1.57, 0]}
+          radius={0.014}
+          smoothness={6}
+        >
+          <meshStandardMaterial
+            color="#b9c1b2"
+            metalness={0.72}
+            roughness={0.48}
+          />
+        </RoundedBox>
+      </group>
+    </>
+  );
+}
+class Fallback extends React.Component {
+  state = { error: false };
+  static getDerivedStateFromError() {
+    return { error: true };
+  }
+  render() {
+    return this.state.error ? (
+      <div className="fallback-card">
+        <img src={profile.assets.portrait} alt="Mohammed Ashfaque" />
+        <strong>Mohammed Ashfaque</strong>
+        <span>Python / Full-stack developer</span>
+      </div>
+    ) : (
+      this.props.children
+    );
+  }
+}
+export default function HeroScene({ reset, flipped, heroRef, onDrag }) {
+  return (
+    <Fallback>
+      <Canvas
+        orthographic
+        dpr={[1.5, 2.5]}
+        camera={{ position: [0, 0, 10], zoom: 145, near: 0.1, far: 100 }}
+        gl={{
+          alpha: true,
+          antialias: true,
+          powerPreference: "high-performance",
+        }}
+        eventSource={heroRef}
+        events={(state) => ({
+          ...events(state),
+          compute: (event, state2) => {
+            const rect = heroRef.current?.getBoundingClientRect();
+            if (!rect) return;
+            const control = event.target?.closest?.(
+              ".hero-art button,.hero-copy a",
+            );
+            if (control) {
+              state2.pointer.set(100, 100);
+            } else {
+              state2.pointer.set(
+                ((event.clientX - rect.left) / rect.width) * 2 - 1,
+                (-(event.clientY - rect.top) / rect.height) * 2 + 1,
+              );
+            }
+            state2.raycaster.setFromCamera(state2.pointer, state2.camera);
+          },
+        })}
+      >
+        <ambientLight intensity={1.3} />
+        <directionalLight position={[3, 5, 5]} intensity={2} />
+        <directionalLight position={[-5, 2, 3]} intensity={1} color="#e2e7d7" />
+        <Suspense fallback={null}>
+          <HangingCard
+            reset={reset}
+            flipped={flipped}
+            heroRef={heroRef}
+            onDrag={onDrag}
+          />
+        </Suspense>
+      </Canvas>
+    </Fallback>
+  );
+}

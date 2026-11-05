@@ -72,7 +72,7 @@ export const projects = [
     links: [
       {
         label: "View repository",
-        href: "https://github.com/MohammedAshfaquem/Food_Rush",
+        href: "https://github.com/MohammedAshfaquem/Food_App-React",
       },
     ],
     type: "COMMERCE / FULL STACK",

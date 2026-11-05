@@ -1,3 +1,4 @@
+import { drawBrandMark } from "./drawBrandMark";
 import * as THREE from "three";
 export function createCardBack(anisotropy) {
   const canvas = document.createElement("canvas");
@@ -15,7 +16,7 @@ export function createCardBack(anisotropy) {
   c.fillText("by nature.", 110, 650);
   c.fillStyle = "#a9bd8d";
   c.font = "220px Arial";
-  c.fillText("✳", 1650, 630);
+  drawBrandMark(c, 1760, 550, 100, "#a9bd8d");
   const rule = (y) => {
     c.strokeStyle = "#627253";
     c.lineWidth = 3;

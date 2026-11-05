@@ -1,3 +1,4 @@
+import { drawBrandMark } from "./geometry/drawBrandMark";
 import { profile } from "../../data/profile";
 import React, { Suspense, useEffect, useMemo, useRef } from "react";
 import { Canvas, events, useFrame, useThree } from "@react-three/fiber";
@@ -55,7 +56,7 @@ function createCardFace(anisotropy) {
     ctx.fillText("Python / Full-stack developer", 100, 2280);
     ctx.fillStyle = "#5f7047";
     ctx.font = "160px Arial";
-    ctx.fillText("✳", 1775, 2135);
+    drawBrandMark(ctx, 1850, 2070, 73, "#5f7047");
     ctx.beginPath();
     ctx.moveTo(100, 2370);
     ctx.lineTo(1948, 2370);

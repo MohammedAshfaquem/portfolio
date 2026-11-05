@@ -1,3 +1,4 @@
+import BrandMark from "../icons/BrandMark";
 import { profile } from "../../data/profile";
 import React from "react";
 export default function Footer() {
@@ -5,7 +6,9 @@ export default function Footer() {
     <footer>
       <a className="brand" href="#">
         {profile.brand}
-        <span>✳</span>
+        <span>
+          <BrandMark />
+        </span>
       </a>
       <span>
         © {/* @__PURE__ */ new Date().getFullYear()} MOHAMMED ASHFAQUE

@@ -1911,3 +1911,26 @@ html[data-theme="light"] .contact .socials a:hover {
     grid-template-columns: minmax(0, 1fr);
   }
 }
+
+/* Vector brand marks avoid platform emoji substitution */
+.brand-mark {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  vertical-align: -0.12em;
+  flex-shrink: 0;
+}
+.brand > span {
+  display: inline-flex;
+  align-items: center;
+}
+.stack-strip i {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.asterisk {
+  display: inline-flex;
+  align-items: center;
+}

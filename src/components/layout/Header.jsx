@@ -1,3 +1,4 @@
+import BrandMark from "../icons/BrandMark";
 import { projects } from "../../data/projects";
 import { profile } from "../../data/profile";
 import React, { useState } from "react";
@@ -9,7 +10,9 @@ export default function Header() {
     <header>
       <a className="brand" href="#" aria-label="Ashfaque home">
         {profile.brand}
-        <span>✳</span>
+        <span>
+          <BrandMark />
+        </span>
       </a>
       <nav className={menu ? "open" : ""} aria-label="Main navigation">
         <a href="#work" onClick={() => setMenu(false)}>

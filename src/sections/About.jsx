@@ -1,3 +1,4 @@
+import BrandMark from "../components/icons/BrandMark";
 import { profile } from "../data/profile";
 import React from "react";
 import { ArrowUpRight } from "lucide-react";
@@ -6,7 +7,9 @@ export default function About() {
     <section id="about" className="about section">
       <div className="about-top reveal">
         <div className="eyebrow">02 / THE PERSON BEHIND THE CODE</div>
-        <span className="asterisk">✳</span>
+        <span className="asterisk">
+          <BrandMark />
+        </span>
       </div>
       <div className="about-grid">
         <div className="about-photo reveal">

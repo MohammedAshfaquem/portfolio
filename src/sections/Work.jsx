@@ -24,7 +24,7 @@ export default function Work({ onSelect }) {
       <div className="work-toolbar">
         <span>SMALL DETAILS. COMPLETE EXPERIENCES.</span>
         <div className="filters" aria-label="Filter projects">
-          {["All", "Full stack", "Backend"].map((f) => (
+          {["All", "Full stack", "Backend", "AI"].map((f) => (
             <button
               key={f}
               className={f === filter ? "active" : ""}
@@ -38,11 +38,7 @@ export default function Work({ onSelect }) {
       </div>
       <div className="project-grid">
         {projects
-          .filter(
-            (p) =>
-              filter === "All" ||
-              (filter === "Backend" ? p.id === "01" : p.id !== "01"),
-          )
+          .filter((p) => filter === "All" || p.categories.includes(filter))
           .map((p) => (
             <button
               className="project"

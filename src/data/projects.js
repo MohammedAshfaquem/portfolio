@@ -1,6 +1,7 @@
 export const projects = [
   {
     id: "01",
+    categories: ["Backend"],
     name: "Tickets2Me",
     cover: "/images/projects/tickets2me-illustrated-cover.jpg",
     coverAlt:
@@ -38,6 +39,7 @@ export const projects = [
   },
   {
     id: "02",
+    categories: ["Full stack", "AI"],
     name: "SmartDine",
     cover: "/images/projects/smartdine-illustrated-cover.jpg",
     coverAlt:
@@ -62,6 +64,7 @@ export const projects = [
   },
   {
     id: "03",
+    categories: ["Full stack"],
     name: "Food Rush",
     cover: "/images/projects/food-rush-illustrated-cover.jpg",
     coverAlt:
@@ -83,5 +86,29 @@ export const projects = [
     solution:
       "Built a React and Redux frontend with Tailwind CSS, integrated with Django REST Framework and PostgreSQL APIs for authentication, product management, payments and order processing.",
     note: "Cover image is an illustrative visual, not an application screenshot. Source code is available in the linked GitHub repository.",
+  },
+  {
+    id: "04",
+    name: "Resume Analyzer",
+    categories: ["Full stack", "AI"],
+    cover: "/images/projects/resume-analyzer-illustrated-cover.jpg",
+    coverAlt:
+      "3D Rolewise Resume Analyzer dashboard showing document evidence, requirement coverage and feedback",
+    type: "AI / WEB APPLICATION",
+    year: "SELECTED PROJECT",
+    color: "resume",
+    stack: ["Python", "Django", "Gemini API", "Pydantic"],
+    desc: "Evidence-based résumé feedback, matched to the role you want.",
+    problem:
+      "Comparing a résumé with a job description can be time-consuming, and useful feedback needs to distinguish supported experience from claims that the résumé does not demonstrate.",
+    solution:
+      "Built Rolewise with Django and Gemini to compare résumé text against job requirements. Users can extract text from PDF or DOCX files, review it, and receive requirement-level evidence, coverage feedback and wording suggestions. Python verifies quoted evidence and calculates weighted coverage; users can download a plain-text report.",
+    note: "Coverage is an explainable application rubric, not an employer's ATS score or hiring probability. Cover image is a conceptual illustration, not an application screenshot.",
+    links: [
+      {
+        label: "View repository",
+        href: "https://github.com/MohammedAshfaquem/resume_analyzer",
+      },
+    ],
   },
 ];

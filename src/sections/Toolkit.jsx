@@ -5,7 +5,7 @@ export default function Toolkit() {
       <span>MY EVERYDAY TOOLKIT</span>
       <div>
         Python <i>✳</i> FastAPI <i>✳</i> Django <i>✳</i> React <i>✳</i>{" "}
-        PostgreSQL <i>✳</i> Docker
+        PostgreSQL <i>✳</i> Docker <i>✳</i> LLMs
       </div>
     </div>
   );

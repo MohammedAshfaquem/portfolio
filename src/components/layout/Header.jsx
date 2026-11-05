@@ -1,3 +1,4 @@
+import { projects } from "../../data/projects";
 import { profile } from "../../data/profile";
 import React, { useState } from "react";
 import { ArrowUpRight, X, Plus } from "lucide-react";
@@ -12,7 +13,7 @@ export default function Header() {
       </a>
       <nav className={menu ? "open" : ""} aria-label="Main navigation">
         <a href="#work" onClick={() => setMenu(false)}>
-          Selected work <span>03</span>
+          Selected work <span>{String(projects.length).padStart(2, "0")}</span>
         </a>
         <a href="#about" onClick={() => setMenu(false)}>
           A little about me

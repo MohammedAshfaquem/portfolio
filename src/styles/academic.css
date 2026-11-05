@@ -313,3 +313,120 @@
     transition: none;
   }
 }
+
+.academic-tabs {
+  margin-top: 25px;
+}
+.academic-tab {
+  width: 100%;
+  margin: 0;
+  text-align: left;
+  border-left-color: transparent;
+  background: transparent;
+  border-radius: 0;
+  transition:
+    background 0.2s,
+    border-color 0.2s;
+}
+.academic-tab + .academic-tab {
+  border-top: 1px solid var(--line);
+}
+.academic-tab.is-selected {
+  border-left-color: var(--accent);
+  background: var(--surface);
+  border-radius: 0 6px 6px 0;
+}
+.academic-tab:hover {
+  background: var(--surface);
+}
+.academic-tab-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+.academic-tab-copy > strong {
+  font-size: 16px;
+  font-weight: 500;
+  letter-spacing: -0.4px;
+}
+.academic-tab-copy > span:last-child {
+  font-size: 11px;
+  line-height: 1.5;
+  color: var(--muted);
+}
+.academic-tab:focus-visible,
+.academic-record:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -3px;
+}
+.academic-record-content {
+  animation: academic-record-in 0.25s ease;
+}
+.academic-route > .academic-route-stops {
+  display: flex;
+  gap: 25px;
+}
+.academic-route-stops button {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 0;
+  background: transparent;
+  text-align: left;
+}
+.academic-route-stops button > span {
+  font: 10px monospace;
+  color: var(--muted);
+}
+.academic-route-stops button i {
+  background: var(--line);
+  flex-shrink: 0;
+}
+.academic-route-stops button.is-selected i {
+  background: var(--accent);
+}
+.academic-route-stops button.is-selected > span {
+  color: var(--accent);
+}
+@keyframes academic-record-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@media (max-width: 850px) {
+  .academic-route > .academic-route-stops {
+    gap: 16px;
+  }
+}
+@media (max-width: 620px) {
+  .academic-route {
+    grid-template-columns: 1fr;
+  }
+  .academic-route > .academic-route-stops {
+    flex-wrap: wrap;
+    gap: 18px;
+  }
+  .academic-route strong {
+    max-width: none;
+  }
+  .academic-route > a {
+    justify-self: start;
+  }
+  .academic-tab {
+    margin: 0;
+    padding: 23px 10px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .academic-record-content {
+    animation: none;
+  }
+  .academic-tab {
+    transition: none;
+  }
+}

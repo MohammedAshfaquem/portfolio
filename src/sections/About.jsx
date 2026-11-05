@@ -41,11 +41,6 @@ export default function About() {
           <a className="text-link" href={profile.assets.resume} download>
             Get to know my experience <ArrowUpRight size={18} />
           </a>
-          <div className="education">
-            <span>THE FOUNDATION</span>
-            <strong>Bachelor of Computer Applications</strong>
-            <p>University of Calicut · 2022 — 2025</p>
-          </div>
         </div>
       </div>
     </section>

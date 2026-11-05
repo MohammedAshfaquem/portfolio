@@ -4,17 +4,16 @@
     <script>
       try {
         document.documentElement.dataset.theme =
-          localStorage.getItem("ashfaque-theme") ||
-          (matchMedia("(prefers-color-scheme: dark)").matches
+          localStorage.getItem("ashfaque-theme-v2") === "dark"
             ? "dark"
-            : "light");
+            : "light";
       } catch {
         document.documentElement.dataset.theme = "light";
       }
     </script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1.0" />
-    <meta name="theme-color" content="#eeeee7" />
+    <meta name="theme-color" content="#f4f3ed" />
     <meta
       name="description"
       content="Mohammed Ashfaque — Python developer building reliable backends and thoughtful web experiences with FastAPI, Django and React."

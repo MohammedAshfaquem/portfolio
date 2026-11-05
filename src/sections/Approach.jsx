@@ -6,7 +6,7 @@ export default function Approach() {
   return (
     <section className="approach section">
       <div>
-        <div className="eyebrow">04 / HOW I THINK</div>
+        <div className="eyebrow">05 / HOW I THINK</div>
         <h2>
           Good software.
           <br />

@@ -6,6 +6,7 @@ import Toolkit from "../sections/Toolkit";
 import Work from "../sections/Work";
 import About from "../sections/About";
 import Experience from "../sections/Experience";
+import AcademicBackground from "../sections/AcademicBackground";
 import Approach from "../sections/Approach";
 import Contact from "../sections/Contact";
 import InteractiveCursor from "../components/effects/InteractiveCursor";
@@ -28,6 +29,7 @@ export default function App() {
         <Work onSelect={setModal} />
         <About />
         <Experience />
+        <AcademicBackground />
         <Approach />
         <Contact />
       </main>

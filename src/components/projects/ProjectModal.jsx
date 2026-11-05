@@ -1,4 +1,3 @@
-import { profile } from "../../data/profile";
 import React, { useEffect, useRef } from "react";
 import { ArrowUpRight, X } from "lucide-react";
 import ProjectVisual from "./ProjectVisual";
@@ -63,14 +62,21 @@ export default function ProjectModal({ modal, onClose }) {
           ))}
         </div>
         <p className="case-note">{modal.note}</p>
-        <a
-          className="text-link"
-          href={profile.links.github}
-          target="_blank"
-          rel="noreferrer"
-        >
-          Explore my GitHub <ArrowUpRight size={18} />
-        </a>
+        {modal.links?.length > 0 && (
+          <div className="project-links" aria-label="Project links">
+            {modal.links.map((link) => (
+              <a
+                key={link.href}
+                className="text-link"
+                href={link.href}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {link.label} <ArrowUpRight size={18} />
+              </a>
+            ))}
+          </div>
+        )}
       </section>
     </div>
   ) : null;

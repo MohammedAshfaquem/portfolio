@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { flushSync } from "react-dom";
 import { Moon, Sun } from "lucide-react";
 import "../../styles/atmosphere.css";
@@ -7,19 +7,6 @@ export default function ThemeToggle() {
     () => document.documentElement.dataset.theme || "light",
   );
   const changing = useRef(false);
-  useEffect(() => {
-    const system = matchMedia("(prefers-color-scheme: dark)");
-    const update = () => {
-      try {
-        if (localStorage.getItem("ashfaque-theme")) return;
-      } catch {}
-      const next = system.matches ? "dark" : "light";
-      document.documentElement.dataset.theme = next;
-      setTheme(next);
-    };
-    system.addEventListener("change", update);
-    return () => system.removeEventListener("change", update);
-  }, []);
   const toggle = async (event) => {
     if (changing.current) return;
     const next = theme === "dark" ? "light" : "dark";
@@ -32,9 +19,9 @@ export default function ThemeToggle() {
       root.dataset.theme = next;
       document
         .querySelector('meta[name="theme-color"]')
-        ?.setAttribute("content", next === "dark" ? "#171b17" : "#eeeee7");
+        ?.setAttribute("content", next === "dark" ? "#171b17" : "#f4f3ed");
       try {
-        localStorage.setItem("ashfaque-theme", next);
+        localStorage.setItem("ashfaque-theme-v2", next);
       } catch {}
     };
     if (matchMedia("(prefers-reduced-motion: reduce)").matches) {

@@ -2,21 +2,52 @@ export const projects = [
   {
     id: "01",
     name: "Tickets2Me",
+    cover: "/images/projects/tickets2me-illustrated-cover.jpg",
+    coverAlt:
+      "3D Tickets2Me desktop booking interface and mobile digital ticket illustration",
     type: "PLATFORMS / BACKEND",
     year: "PROFESSIONAL WORK",
     color: "ticket",
     title: "Good times.\nSolid systems.",
-    stack: ["FastAPI", "PostgreSQL", "SQLAlchemy"],
-    desc: "The engineering behind a smoother way to book events and movies.",
+    stack: ["FastAPI", "PostgreSQL", "SQLAlchemy", "LLMs", "AI Integration"],
+    desc: "A ticketing platform spanning Admin, Customer, Counter Sales and Inventory Management & POS.",
     problem:
       "Booking systems need to keep seat availability, payment status and ticket validation in sync—even when a booking fails or a customer leaves halfway through.",
     solution:
       "My work covers booking APIs, cancellation and refund rollback, regional PostgreSQL schemas, Alembic migrations, QR ticket scanning and background cleanup jobs. I also work on push notifications, confirmation emails and revenue reporting.",
-    note: "Backend contributions described in my CV alongside my role at MITE Technology. No internal source code or production screenshots are included.",
+    note: "Tickets2Me includes Admin, Customer, Counter Sales and Inventory Management & POS applications. The links below open UAT environments; some require authorized access. Source code is hosted privately on Bitbucket; no public repository is available.",
+    privateSource: true,
+    links: [
+      {
+        label: "Admin · UAT",
+        href: "https://tickets2me-admin-uat.netlify.app/login",
+      },
+      {
+        label: "Customer · UAT",
+        href: "https://mite-uat.tickets2me.com/en/ind/up",
+      },
+      {
+        label: "Counter Sales · UAT",
+        href: "https://uat-tickets2me-countersale.netlify.app/login",
+      },
+      {
+        label: "Inventory & POS · UAT",
+        href: "https://tickets2me-inventory-uat.netlify.app/login",
+      },
+    ],
   },
   {
     id: "02",
     name: "SmartDine",
+    cover: "/images/projects/smartdine-illustrated-cover.jpg",
+    coverAlt:
+      "3D SmartDine restaurant dashboard and mobile table ordering illustration",
+    links: [
+      {
+        label: "View repository",
+        href: "https://github.com/MohammedAshfaquem/Smart_Dine",
+      },
+    ],
     type: "PRODUCT / FULL STACK",
     year: "SELECTED PROJECT",
     color: "dine",
@@ -27,11 +58,20 @@ export const projects = [
       "Restaurant ordering involves different people, changing order states and a menu that customers may need help exploring.",
     solution:
       "Built role-based authentication for Admin, Kitchen, Waiter and Customer workflows. Table-specific QR ordering connects to a custom dish builder, preparation estimates and a Pending → Preparing → Ready → Served lifecycle. A Gemini assistant offers menu recommendations.",
-    note: "Additional features include waiter dispatch, inventory alerts and PDF sales reports. Visuals here are illustrative interface concepts.",
+    note: "Additional features include waiter dispatch, inventory alerts and PDF sales reports. Cover image is an illustrative visual, not an application screenshot.",
   },
   {
     id: "03",
     name: "Food Rush",
+    cover: "/images/projects/food-rush-illustrated-cover.jpg",
+    coverAlt:
+      "3D Food Rush food commerce desktop and mobile checkout illustration",
+    links: [
+      {
+        label: "View repository",
+        href: "https://github.com/MohammedAshfaquem/Food_Rush",
+      },
+    ],
     type: "COMMERCE / FULL STACK",
     year: "SELECTED PROJECT",
     color: "food",
@@ -42,6 +82,6 @@ export const projects = [
       "A shopping experience needs a responsive interface and a backend that handles authentication, products, payments and orders together.",
     solution:
       "Built a React and Redux frontend with Tailwind CSS, integrated with Django REST Framework and PostgreSQL APIs for authentication, product management, payments and order processing.",
-    note: "Visuals here are illustrative interface concepts. Explore my GitHub profile for available repositories.",
+    note: "Cover image is an illustrative visual, not an application screenshot. Source code is available in the linked GitHub repository.",
   },
 ];

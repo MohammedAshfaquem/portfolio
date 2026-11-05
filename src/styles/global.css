@@ -1,13 +1,18 @@
 @import "https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap";
 :root {
   font-family: "DM Sans", sans-serif;
-  color: #272c25;
-  background: #eeeee7;
+  color: #242522;
+  background: #f4f3ed;
   font-synthesis: none;
   font-weight: 400;
-  --line: #d2d4c9;
-  --olive: #6b7758;
-  --ink: #272c25;
+  --line: #d9d9d0;
+  --olive: #72736b;
+  --paper: #f4f3ed;
+  --muted: #72736b;
+  --accent: #4354ce;
+  --surface: #ebece6;
+  --white: #fafaf6;
+  --ink: #242522;
 }
 * {
   box-sizing: border-box;
@@ -953,7 +958,7 @@ footer .brand span {
 }
 .modal {
   position: relative;
-  background: #eeeee7;
+  background: #f4f3ed;
   padding: 45px;
   width: 680px;
   max-width: 100%;
@@ -1538,7 +1543,7 @@ footer .brand span {
     left: 0;
     right: 0;
     z-index: 20;
-    background: #eeeee7;
+    background: #f4f3ed;
     padding: 25px 6%;
     border-bottom: 1px solid var(--line);
     flex-direction: column;
@@ -1781,4 +1786,116 @@ footer .brand {
     padding: 7px 9px;
     margin-left: 1px;
   }
+}
+
+.project-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px 24px;
+  margin-top: 20px;
+}
+
+/* Illustrated project covers */
+.project-cover {
+  background: var(--surface, #d5d9c9);
+}
+.project-cover-image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.65s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.project:hover .project-cover-image,
+.project:focus-visible .project-cover-image {
+  transform: scale(1.045);
+}
+@media (prefers-reduced-motion: reduce) {
+  .project-cover-image {
+    transition: none;
+  }
+  .project:hover .project-cover-image,
+  .project:focus-visible .project-cover-image {
+    transform: none;
+  }
+}
+
+.project-visual.project-cover {
+  aspect-ratio: 16 / 9;
+}
+.project-cover .project-cover-image {
+  object-fit: contain;
+}
+
+/* Warm paper palette with restrained blue accents */
+html[data-theme="light"] body {
+  background: var(--paper);
+  color: var(--ink);
+}
+html[data-theme="light"] h1 em {
+  color: var(--accent);
+}
+html[data-theme="light"] h2 em {
+  color: var(--ink);
+}
+html[data-theme="light"] .brand span {
+  color: var(--accent);
+}
+html[data-theme="light"] ::selection {
+  background: #dce0fb;
+  color: var(--ink);
+}
+html[data-theme="light"] :focus-visible {
+  outline-color: var(--accent);
+}
+html[data-theme="light"] .text-link:hover {
+  color: var(--accent);
+}
+html[data-theme="light"] .career-role::before,
+html[data-theme="light"] .career-current i {
+  background: var(--accent);
+}
+html[data-theme="dark"] {
+  --paper: #171b17;
+  --surface: #252d24;
+  --white: #20271f;
+  --muted: #a8b09d;
+  --accent: #a0abff;
+}
+
+/* Consistent light contact section and gently rounded project covers */
+html[data-theme="light"] .contact {
+  background: var(--paper);
+  color: var(--ink);
+  border-top: 1px solid var(--line);
+}
+html[data-theme="light"] .contact .eyebrow,
+html[data-theme="light"] .contact-bottom p {
+  color: var(--muted);
+}
+html[data-theme="light"] .contact h2 em {
+  color: var(--accent);
+}
+html[data-theme="light"] .contact h2 > a,
+html[data-theme="light"] .contact-bottom,
+html[data-theme="light"] .contact .socials a {
+  border-color: var(--line);
+}
+html[data-theme="light"] .contact h2 > a:hover {
+  background: var(--surface);
+}
+html[data-theme="light"] .contact .email-copy,
+html[data-theme="light"] .contact .socials {
+  color: var(--ink);
+}
+html[data-theme="light"] .contact .email-copy > span,
+html[data-theme="light"] .contact .socials a:hover {
+  color: var(--accent);
+}
+.project {
+  border-radius: 10px;
+}
+.project-visual.project-cover {
+  border-radius: 10px;
+  overflow: hidden;
 }

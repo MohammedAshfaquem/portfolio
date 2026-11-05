@@ -1,0 +1,315 @@
+.academic-section {
+  border-top: 1px solid var(--line);
+}
+.academic-kicker {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  font: 9px monospace;
+  letter-spacing: 1px;
+  color: var(--muted);
+}
+.academic-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  gap: 25px;
+  margin: 35px 0 40px;
+}
+.academic-heading h2 {
+  font-size: clamp(36px, 4.8vw, 66px);
+  letter-spacing: -2.5px;
+  line-height: 1.12;
+  margin: 0;
+}
+.academic-heading p {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.85;
+  margin: 0;
+}
+.academic-workspace {
+  display: grid;
+  grid-template-columns: 1fr 1.25fr;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  overflow: hidden;
+}
+.academic-index {
+  padding: 30px;
+  border-right: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
+}
+.academic-index-label {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  font: 9px monospace;
+  letter-spacing: 0.7px;
+  color: var(--muted);
+}
+.academic-index-record {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 20px;
+  align-items: center;
+  margin: 35px -10px 25px;
+  padding: 25px 15px;
+  border-left: 2px solid var(--accent);
+  background: var(--surface);
+  border-radius: 0 6px 6px 0;
+}
+.academic-index-years {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.academic-index-years strong {
+  font-size: 22px;
+  font-weight: 500;
+  letter-spacing: -1px;
+}
+.academic-index-years > span {
+  font: 10px monospace;
+  color: var(--muted);
+}
+.academic-level {
+  font: 9px monospace;
+  letter-spacing: 1px;
+  color: var(--muted);
+}
+.academic-index-record h3 {
+  font-size: 16px;
+  font-weight: 500;
+  margin: 10px 0 7px;
+  letter-spacing: -0.4px;
+}
+.academic-index-record p {
+  font-size: 11px;
+  color: var(--muted);
+  line-height: 1.5;
+  margin: 0;
+}
+.academic-index-record > svg {
+  color: var(--accent);
+}
+.academic-index-note {
+  margin-top: auto;
+  padding-top: 25px;
+  font: 8px monospace;
+  letter-spacing: 1px;
+  color: var(--muted);
+}
+.academic-record {
+  background: var(--white);
+  padding: 30px 35px;
+}
+.academic-record-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 35px;
+  font: 9px monospace;
+  letter-spacing: 1px;
+  color: var(--muted);
+}
+.academic-record h3 {
+  font-size: clamp(25px, 3vw, 39px);
+  font-weight: 400;
+  line-height: 1.2;
+  letter-spacing: -1.3px;
+  margin: 15px 0 12px;
+  max-width: 440px;
+}
+.academic-university {
+  font-size: 13px;
+  color: var(--muted);
+  margin: 0;
+}
+.academic-study-years {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin: 35px 0;
+}
+.academic-study-years > span:not(.academic-year-line) {
+  font-size: 34px;
+  font-weight: 400;
+  letter-spacing: -1.5px;
+}
+.academic-year-line {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font: 8px monospace;
+  color: var(--muted);
+}
+.academic-year-line i {
+  flex: 1;
+  height: 1px;
+  background: var(--line);
+}
+.academic-details {
+  border-top: 1px solid var(--line);
+}
+.academic-details summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  list-style: none;
+  padding: 14px 0;
+  font-size: 11px;
+}
+.academic-details summary::-webkit-details-marker {
+  display: none;
+}
+.academic-details summary:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
+}
+.academic-details summary svg {
+  transition: transform 0.2s;
+}
+.academic-details[open] summary svg {
+  transform: rotate(180deg);
+}
+.academic-details dl {
+  margin: 0 0 16px;
+  font-size: 11px;
+  line-height: 1.8;
+}
+.academic-details dl > div {
+  display: grid;
+  grid-template-columns: 90px 1fr;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+.academic-details dt {
+  color: var(--muted);
+}
+.academic-details dd {
+  margin: 0;
+}
+.academic-record-foot {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  gap: 20px;
+  padding-top: 20px;
+  border-top: 1px solid var(--line);
+}
+.academic-record-foot > span {
+  font: 8px monospace;
+  color: var(--muted);
+  letter-spacing: 0.8px;
+}
+.academic-record-foot strong {
+  font-size: 54px;
+  line-height: 1;
+  letter-spacing: -3px;
+  font-weight: 500;
+  color: var(--line);
+}
+.academic-route {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 35px;
+  padding-top: 25px;
+}
+.academic-route > span {
+  font: 9px monospace;
+  letter-spacing: 1px;
+  color: var(--muted);
+}
+.academic-route > div {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+}
+.academic-route i {
+  height: 7px;
+  width: 7px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+.academic-route > div > span {
+  font: 10px monospace;
+  color: var(--muted);
+}
+.academic-route strong {
+  display: block;
+  font:
+    11px "DM Sans",
+    sans-serif;
+  margin-top: 7px;
+  color: var(--ink);
+}
+.academic-route a {
+  font-size: 11px;
+  white-space: nowrap;
+}
+@media (max-width: 850px) {
+  .academic-index {
+    padding: 25px 20px;
+  }
+  .academic-index-record {
+    grid-template-columns: auto 1fr;
+    gap: 14px;
+  }
+  .academic-index-record > svg {
+    display: none;
+  }
+  .academic-record {
+    padding: 25px;
+  }
+  .academic-route {
+    gap: 20px;
+  }
+}
+@media (max-width: 620px) {
+  .academic-kicker > span:last-child {
+    display: none;
+  }
+  .academic-heading {
+    flex-direction: column;
+    align-items: start;
+    gap: 18px;
+    margin: 28px 0;
+  }
+  .academic-workspace {
+    grid-template-columns: 1fr;
+  }
+  .academic-index {
+    border-right: 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .academic-index-record {
+    margin: 20px -5px 0;
+  }
+  .academic-index-note {
+    display: none;
+  }
+  .academic-record-top {
+    margin-bottom: 25px;
+  }
+  .academic-route {
+    grid-template-columns: 1fr auto;
+    align-items: start;
+  }
+  .academic-route > span {
+    grid-column: 1 / -1;
+  }
+  .academic-route strong {
+    max-width: 180px;
+    line-height: 1.5;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .academic-details summary svg {
+    transition: none;
+  }
+}
